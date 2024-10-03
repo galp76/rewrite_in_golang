@@ -2,7 +2,6 @@ package main
 
 import (
 	"fmt"
-	"time"
 	"os"
 	"bufio"
 	"strings"
@@ -21,7 +20,6 @@ func autenticacion() (bool, string) {
 		}
 	}
 
-	time.Sleep(1 * time.Second);
 	var clave string;
 	for {
 		fmt.Printf("\nIndique su clave: ");

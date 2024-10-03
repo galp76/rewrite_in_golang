@@ -8,9 +8,12 @@ import (
 	"strings"
 )
 
+func sleep() {
+	time.Sleep(1 * time.Second);
+}
+
 func main() {
 	verificado, usuario := autenticacion();
-	time.Sleep(1 * time.Second);
 	if verificado {
 		fmt.Printf("\nUsuario %s validado.\n", usuario);
 	} else {
@@ -66,6 +69,7 @@ func main() {
 	}
 
 	prompt := "\nPor favor indica una de las siguientes opciones:\n\n  1. Práctica.\n  2. Tarea.\n  3. Salir del sistema.\n\nOpción:";
+	sleep();
 	var seleccion int;
 	for {
 		fmt.Println(prompt);
@@ -73,21 +77,38 @@ func main() {
 		seleccion = obtenerEntradaUsuario(sesion, respaldo);
 		switch seleccion {
 			case 1:
-				prompt2 := "\nContinuamos al m'odulo de pr'actica.";
-				fmt.Println(prompt2);
+				prompt = "\nContinuamos al módulo de práctica.";
+				fmt.Println(prompt);
 				if respaldo {
-					archivoAgregar(sesion, prompt2);
+					archivoAgregar(sesion, prompt);
 				}
 				time.Sleep(1 * time.Second);
-				return;
+				practica(sesion, respaldo);
+			case 2:
+				prompt = "\nContinuamos al módulo de tareas.\n";
+				fmt.Println(prompt);
+				if respaldo {
+					archivoAgregar(sesion, prompt);
+				}
+				sleep();
+				os.Exit(0);
+			case 3:
+				prompt = "\nSaliendo del sistema.\n";
+				fmt.Println(prompt);
+				if respaldo {
+					archivoAgregar(sesion, prompt);
+				}
+				sleep();
+				os.Exit(0);
 			default:
-				prompt2 := "\nOpci'on no v'alida. Indique la opci'on nuevamente:\n";
+				prompt2 := "\nOpción no válida. Indique la selección nuevamente.\n";
 				fmt.Println(prompt2);
 				if respaldo {
 					archivoAgregar(sesion, prompt2);
 				}
-				time.Sleep(1 * time.Second);
+				sleep();
 				continue;
 		}
+
 	}
 }

@@ -3,8 +3,10 @@ package main
 import (
 	"os"
 	"fmt"
+	"bufio"
 	"time"
 	"strconv"
+	"strings"
 )
 
 func archivoAgregar(sesion, data string) {
@@ -40,4 +42,28 @@ func obtenerEntradaUsuario(sesion string, respaldo bool) int {
 		archivoAgregar(sesion, strconv.Itoa(opcion));
 		return opcion;
 	}
+}
+
+func obtenerOpciones(sesion string, respaldo bool) ([]string, []string) {
+	var opciones, binarios []string;
+	archivo_opciones, err := os.Open("opciones.txt");
+	if err != nil {
+		prompt := "\nHubo un problema leyendo el archivo de opciones y el sistema debe cerrarse.\n";
+		sleep();
+		fmt.Println(prompt);
+		if respaldo {
+			archivoAgregar(sesion, prompt);
+		}
+	}
+	defer archivo_opciones.Close();
+
+	scanner := bufio.NewScanner(archivo_opciones);
+	scanner.Split(bufio.ScanLines);
+	for scanner.Scan() {
+		parts := strings.Split(scanner.Text(), ";");
+		opciones = append(opciones, parts[0]);
+		binarios = append(binarios, parts[1]);
+	}
+
+	return opciones, binarios;
 }

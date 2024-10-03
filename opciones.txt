@@ -1,0 +1,4 @@
+Sum;bin/sum
+Subtraction;bin/subtraction
+Multiplication;bin/multiplication
+Division;bin/division
