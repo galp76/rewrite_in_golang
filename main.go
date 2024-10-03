@@ -8,59 +8,86 @@ import (
 	"strings"
 )
 
-func authentication() (bool, string) {
-	var usuario string;
-	for {
-		fmt.Printf("\nIndique su usuario: ");
-		var _, err = fmt.Scanln(&usuario);
-		if err != nil {
-			fmt.Println("Error procesando la información.");
-			continue;
-		} else {
-			break;
-		}
-	}
-
-	time.Sleep(1 * time.Second);
-	var clave string;
-	for {
-		fmt.Printf("\nIndique su clave: ");
-		var _, err = fmt.Scanln(&clave);
-		if err != nil {
-			fmt.Println("Error procesando la información.");
-			continue;
-		} else {
-			break;
-		}
-	}
-
-	var verified bool;
-	readFile, err := os.Open("users.txt");
-    if err != nil {
-        fmt.Println(err);
-    }
-    fileScanner := bufio.NewScanner(readFile);
-    fileScanner.Split(bufio.ScanLines);
-    for fileScanner.Scan() {
-        var line = fileScanner.Text();
-		var parts []string = strings.Split(line, ";");
-		if parts[0] == usuario && parts[1] == clave {
-			verified = true;
-			break;
-		}
-    }
-    readFile.Close();
-
-	return verified, usuario;
-}
-
 func main() {
-	verificado, usuario := authentication();
+	verificado, usuario := autenticacion();
 	time.Sleep(1 * time.Second);
 	if verificado {
 		fmt.Printf("\nUsuario %s validado.\n", usuario);
 	} else {
 		fmt.Println("\nHay un error con el usuario y/o la clave suministrados.");
 		os.Exit(0);
+	}
+
+	now := time.Now();
+	year, month, _ := now.Date();
+	if year > 2024 || month.String() > "October" {
+		fmt.Println("\nEl perìodo de prueba ha terminado.\n");
+		os.Exit(0);
+	}
+
+	if usuario == "admin" {
+		time.Sleep(1 * time.Second);
+		fmt.Println("\nContinuamos al módulo de administración de usuarios.\n");
+		time.Sleep(1 * time.Second);
+		os.Exit(0);
+	}
+
+	var respaldo = false;
+	archivo_configuracion, err := os.Open("configuracion.txt");
+	if err != nil {
+		fmt.Printf("\nHubo un error leyendo el archivo de configuración: %s.\n", err);
+		time.Sleep(1 * time.Second);
+		fmt.Println("\nSaliendo del sistema.\n");
+		os.Exit(1);
+	}
+	defer archivo_configuracion.Close();
+
+	scanner := bufio.NewScanner(archivo_configuracion);
+	scanner.Split(bufio.ScanLines);
+	for scanner.Scan() {
+		parts := strings.Split(scanner.Text(), "=");
+		if parts[0] == "respaldo" && parts[1] == "true" {
+			respaldo = true;
+			break;
+		}
+	}
+
+	var sesion string;
+	if respaldo {
+		sesion = fmt.Sprintf("usuarios/%s/sesiones/%s.txt", usuario, now.Format("2006-01-02_03:04"));
+		archivoSesion, err := os.Create(sesion);
+		if err != nil {
+			fmt.Println("\nEl archivo de respaldo no pudo ser creado.\n");
+			time.Sleep(1 * time.Second);
+			fmt.Println("\nSaliendo del sistema.\n");
+			os.Exit(1);
+		}
+		archivoSesion.Close();
+	}
+
+	prompt := "\nPor favor indica una de las siguientes opciones:\n\n  1. Práctica.\n  2. Tarea.\n  3. Salir del sistema.\n\nOpción:";
+	var seleccion int;
+	for {
+		fmt.Println(prompt);
+		archivoAgregar(sesion, prompt);
+		seleccion = obtenerEntradaUsuario(sesion, respaldo);
+		switch seleccion {
+			case 1:
+				prompt2 := "\nContinuamos al m'odulo de pr'actica.";
+				fmt.Println(prompt2);
+				if respaldo {
+					archivoAgregar(sesion, prompt2);
+				}
+				time.Sleep(1 * time.Second);
+				return;
+			default:
+				prompt2 := "\nOpci'on no v'alida. Indique la opci'on nuevamente:\n";
+				fmt.Println(prompt2);
+				if respaldo {
+					archivoAgregar(sesion, prompt2);
+				}
+				time.Sleep(1 * time.Second);
+				continue;
+		}
 	}
 }
