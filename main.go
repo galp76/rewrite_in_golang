@@ -8,10 +8,6 @@ import (
 	"strings"
 )
 
-func sleep() {
-	time.Sleep(1 * time.Second);
-}
-
 func main() {
 	verificado, usuario := autenticacion();
 	if verificado {
@@ -23,7 +19,7 @@ func main() {
 
 	now := time.Now();
 	year, month, _ := now.Date();
-	if year > 2024 || month.String() > "October" {
+	if year > 2024 || month.String() > "December" {
 		fmt.Println("\nEl perìodo de prueba ha terminado.\n");
 		os.Exit(0);
 	}
