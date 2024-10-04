@@ -2,7 +2,7 @@ package main
 
 import (
 	"fmt"
-	"os"
+//	"os"
 	"strings"
 )
 
@@ -17,8 +17,8 @@ func practica(sesion string, respaldo bool) {
 			switch entradaUsuario {
 			case 1:
 				fmt.Println("Llamando mainSuma()");
-				os.Exit(0);
-//				mainSuma(sesion, respaldo);
+//				os.Exit(0);
+				mainSuma(sesion, respaldo);
 			default:
 				sleep();
                 prompt = "\nOpción no válida.\n\nIndique la opción nuevamente:\n";

@@ -18,8 +18,8 @@ func main() {
 	}
 
 	now := time.Now();
-	year, month, _ := now.Date();
-	if year > 2024 || month.String() > "December" {
+	year, _, _ := now.Date();
+	if year > 2024 /*|| month.String() > "December"*/ {
 		fmt.Println("\nEl perìodo de prueba ha terminado.\n");
 		os.Exit(0);
 	}
