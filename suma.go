@@ -91,7 +91,29 @@ func suma(operandos []string, sesion string, respaldo bool) {
 	}
 	sleep();
 	ejercicio.mostrarSuma(sesion, respaldo);
-// LLEGAMOS HASTA LA LINEA 127 DE RUST/sum_rust/lib.rs
+	var numeros []int;
+	for _, item := range operandos {
+		numero, _ := strconv.Atoi(item);
+		numeros = append(numeros, numero);
+	}
+//	var llevamos int = 0;
+	for total != 0 {
+		var tmpTotal int;
+		var tmpString string;
+		for i := 0; i < len(numeros); i++ {
+			numero := numeros[i];
+			tmpTotal += numero % 10;
+			tmpNumero := fmt.Sprintf("%d + ", numero % 10);
+			tmpString += tmpNumero;
+			numero /= 10;
+			numeros[i] = numero;
+		}
+		sleep();
+		prompt2 := fmt.Sprintf("\nCuanto es %s?", tmpString[:len(tmpString) - 3]);
+		fmt.Println(prompt2);
+// HAY QUE IMPLEMENTAR equal_or_not Y DESPUES CONTINUAR EN LA LINEA 145 DE RUST/sum_rust/lib.rs
+//		break;
+	}
 }
 
 func mainSuma(sesion string, respaldo bool) {

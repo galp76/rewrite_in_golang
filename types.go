@@ -5,6 +5,7 @@ import (
 	"strings"
 )
 
+// AQUI COMIENZAN LA DEFINICION Y LAS FUNCIONES DEL struct LINEA
 type Linea struct {
 	sepIzquierdo string
 	padIzquierdo int
@@ -45,7 +46,7 @@ func (linea *Linea) postfix(nuevo string) {
 	linea.padIzquierdo -= len(nuevo);
 }
 
-// AQUI COMIENZA LA DEFINICIONES Y LAS FUNCIONES DEL struct SUMA
+// AQUI COMIENZA LA DEFINICION Y LAS FUNCIONES DEL struct SUMA
 type Suma struct {
 	mostrarLlevamos bool
 	lineaLlevamos Linea
@@ -82,6 +83,7 @@ func (ejercicio Suma) mostrarSuma(sesion string, respaldo bool) {
 			archivoAgregar(sesion, prompt);
 		}
 	}
+	fmt.Println("");
 	for i, _ := range ejercicio.sumandos {
 		prompt = fmt.Sprintf("%s", ejercicio.sumandos[i].construir());
 		fmt.Println(prompt);
