@@ -86,7 +86,7 @@ func mostrarOpciones(opciones []string, mostrarPrompt bool, sesion string, respa
 	var prompt string;
 	for i, item := range opciones {
 		if i < 9 {
-			prompt = fmt.Sprintf("  %d, %s", i + 1, item);
+			prompt = fmt.Sprintf("  %d. %s", i + 1, item);
 		} else {
 			prompt = fmt.Sprintf(" %d. %s", i +1, item);
 		}
@@ -95,7 +95,7 @@ func mostrarOpciones(opciones []string, mostrarPrompt bool, sesion string, respa
 			archivoAgregar(sesion, prompt);
 		}
 	}
-	prompt = "\nOpci'on:";
+	prompt = "\nOpción:";
 	fmt.Println(prompt);
 	if respaldo {
 		archivoAgregar(sesion, prompt);

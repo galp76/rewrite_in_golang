@@ -5,6 +5,7 @@ import (
 	"time"
 	"os"
 	"strings"
+	"strconv"
 )
 
 func obtenerEntradaUsuarioSuma(prompt string, operador string, sesion string, respaldo bool) string {
@@ -28,8 +29,6 @@ func obtenerEntradaUsuarioSuma(prompt string, operador string, sesion string, re
 			continue;
 		}
 
-		fmt.Printf("entrada: %s\n", entrada);
-
 		if entrada == "s" || entrada == "S" {
 			if respaldo {
 				archivoAgregar(sesion, entrada);
@@ -52,7 +51,7 @@ func obtenerEntradaUsuarioSuma(prompt string, operador string, sesion string, re
 				if respaldo {
 					archivoAgregar(sesion, entrada);
 				}
-				prompt2 := fmt.Sprintf("\nCaracter no v'alido encontrado: %s", ch);
+				prompt2 := fmt.Sprintf("\nCaracter no válido encontrado: %s", ch);
 				fmt.Println(prompt2);
 				if respaldo {
 					archivoAgregar(sesion, prompt2);
@@ -79,7 +78,20 @@ func obtenerEntradaUsuarioSuma(prompt string, operador string, sesion string, re
 }
 
 func suma(operandos []string, sesion string, respaldo bool) {
-	fmt.Println("Adentro de suma.");
+	var total int;
+	for _, item := range operandos {
+		numero, _ := strconv.Atoi(item);
+		total += numero;
+	}
+	ejercicio := nuevaSuma(operandos);
+	prompt := "\nVamos a realizar el siguiente ejercicio:";
+	fmt.Println(prompt);
+	if respaldo {
+		archivoAgregar(sesion, prompt);
+	}
+	sleep();
+	ejercicio.mostrarSuma(sesion, respaldo);
+// LLEGAMOS HASTA LA LINEA 127 DE RUST/sum_rust/lib.rs
 }
 
 func mainSuma(sesion string, respaldo bool) {
@@ -92,7 +104,7 @@ func mainSuma(sesion string, respaldo bool) {
 
 		if len(operandos) == 1 {
 			sleep();
-			advertencia := "\nLa cantidad de sumandos no es la ccorrecta.";
+			advertencia := "\nLa cantidad de sumandos no es la correcta.";
 			fmt.Println(advertencia);
 			if respaldo {
 				archivoAgregar(sesion, advertencia);
@@ -104,7 +116,8 @@ func mainSuma(sesion string, respaldo bool) {
 		var repetir bool;
 		for _, item := range operandos {
 			if len(item) == 0 {
-				advertencia := "\nLa cantidaad de operadores no es la correcta.";
+				sleep();
+				advertencia := "\nLa cantidad de operadores no es la correcta.";
 				fmt.Println(advertencia);
 				if respaldo {
 					archivoAgregar(sesion, advertencia);

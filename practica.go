@@ -16,12 +16,16 @@ func practica(sesion string, respaldo bool) {
 		if entradaUsuario != 0 && entradaUsuario <= len(opciones) {
 			switch entradaUsuario {
 			case 1:
-				fmt.Println("Llamando mainSuma()");
-//				os.Exit(0);
 				mainSuma(sesion, respaldo);
 			default:
 				sleep();
-                prompt = "\nOpción no válida.\n\nIndique la opción nuevamente:\n";
+                prompt = "\nOpción no válida.\n";
+				fmt.Println(prompt);
+				if respaldo {
+					archivoAgregar(sesion, prompt);
+				}
+				sleep();
+				prompt = "Indique la opción nuevamente:\n";
 				fmt.Println(prompt);
 				if respaldo {
 					archivoAgregar(sesion, prompt);
