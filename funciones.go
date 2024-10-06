@@ -38,6 +38,16 @@ func obtenerEntradaUsuario(sesion string, respaldo bool) int {
 			continue;
 		}
 
+		if strings.ToLower(entradaUsuario) == "s" {
+			sleep();
+			fmt.Println("\nSaliendo del sistema...");
+			if respaldo {
+				archivoAgregar(sesion, "\nSaliendo del sistema...");
+			}
+			sleep();
+			os.Exit(0);
+		}
+
 		opcion, err := strconv.Atoi(entradaUsuario);
 		if err != nil {
 			if respaldo {
@@ -46,6 +56,7 @@ func obtenerEntradaUsuario(sesion string, respaldo bool) int {
 			return 0;
 		}
 		archivoAgregar(sesion, strconv.Itoa(opcion));
+
 		return opcion;
 	}
 }

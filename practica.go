@@ -15,17 +15,34 @@ func practica(sesion string, respaldo bool) {
 		entradaUsuario = obtenerEntradaUsuario(sesion, respaldo);
 		if entradaUsuario != 0 && entradaUsuario <= len(opciones) {
 			switch entradaUsuario {
-			case 1:
-				mainSuma(sesion, respaldo);
-			default:
+				case 1:
+					mainSuma(sesion, respaldo);
+				default:
+					sleep();
+					prompt = "\nPor los momentos solamante está implementada la opción 1.";
+					fmt.Println(prompt);
+					if respaldo {
+						archivoAgregar(sesion, prompt);
+					}
+					sleep();
+					prompt = "\nIndique la opción nuevamente.\n";
+					fmt.Println(prompt);
+					if respaldo {
+						archivoAgregar(sesion, prompt);
+					}
+					sleep();
+					mostrarOpciones(opciones, false, sesion, respaldo);
+					continue;
+			}
+		} else {
 				sleep();
-                prompt = "\nOpción no válida.\n";
+                prompt = "\nOpción no válida.";
 				fmt.Println(prompt);
 				if respaldo {
 					archivoAgregar(sesion, prompt);
 				}
 				sleep();
-				prompt = "Indique la opción nuevamente:\n";
+				prompt = "\nIndique la opción nuevamente.\n";
 				fmt.Println(prompt);
 				if respaldo {
 					archivoAgregar(sesion, prompt);
@@ -33,7 +50,6 @@ func practica(sesion string, respaldo bool) {
 				sleep();
 				mostrarOpciones(opciones, false, sesion, respaldo);
 				continue;
-			}
 		}
 		sleep();
 		prompt = fmt.Sprintf("\n%s", strings.Repeat("*", 105));

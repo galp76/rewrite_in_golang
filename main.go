@@ -69,7 +69,9 @@ func main() {
 	var seleccion int;
 	for {
 		fmt.Println(prompt);
-		archivoAgregar(sesion, prompt);
+		if respaldo {
+			archivoAgregar(sesion, prompt);
+		}
 		seleccion = obtenerEntradaUsuario(sesion, respaldo);
 		switch seleccion {
 			case 1:

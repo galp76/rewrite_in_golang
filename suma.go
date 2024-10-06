@@ -163,7 +163,7 @@ func suma(operandos []string, sesion string, respaldo bool) {
 				ejercicio.lineaResultado.prefix(numeroString);
 				sleep();
 				ejercicio.mostrarSuma(sesion, respaldo);
-				os.Exit(0);
+				return;
 			}
 			ejercicio.lineaLlevamos.prefix(strconv.Itoa(llevamos));
 			sleep();
