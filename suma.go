@@ -77,6 +77,25 @@ func obtenerEntradaUsuarioSuma(prompt string, operador string, sesion string, re
 	return entrada;
 }
 
+func compararValorSuma(tmpTotal int, prompt string, sesion string, respaldo bool) {
+	for {
+		entradaUsuario := obtenerEntradaUsuarioSuma(prompt, "", sesion, respaldo);
+		// no se maneja el error porque se sabe que entradaUsuario es un numero
+		numero, _ := strconv.Atoi(entradaUsuario);
+		if numero == tmpTotal {
+			break;
+		} else {
+			sleep();
+			prompt := "\nNo es el número que estamos buscando, por favor intenta de nuevo.";
+			fmt.Println(prompt);
+			if respaldo {
+				archivoAgregar(sesion, prompt);
+			}
+			sleep();
+		}
+	}
+}
+
 func suma(operandos []string, sesion string, respaldo bool) {
 	var total int;
 	for _, item := range operandos {
@@ -96,7 +115,7 @@ func suma(operandos []string, sesion string, respaldo bool) {
 		numero, _ := strconv.Atoi(item);
 		numeros = append(numeros, numero);
 	}
-//	var llevamos int = 0;
+	var llevamos int = 0;
 	for total != 0 {
 		var tmpTotal int;
 		var tmpString string;
@@ -111,8 +130,48 @@ func suma(operandos []string, sesion string, respaldo bool) {
 		sleep();
 		prompt2 := fmt.Sprintf("\nCuanto es %s?", tmpString[:len(tmpString) - 3]);
 		fmt.Println(prompt2);
-// HAY QUE IMPLEMENTAR equal_or_not Y DESPUES CONTINUAR EN LA LINEA 145 DE RUST/sum_rust/lib.rs
-//		break;
+		if ejercicio.mostrarLlevamos {
+			sleep();
+			fmt.Println("\nCorrecto.");
+			if respaldo {
+				archivoAgregar(sesion, "\nCorrecto.");
+			}
+			sleep();
+			prompt2 = fmt.Sprintf("Y con %d que llevamos cuanto es?", llevamos);
+			tmpTotal += llevamos;
+			compararValor(tmpTotal, prompt2, sesion, respaldo);
+		}
+		llevamos = tmpTotal / 10;
+		if total >= 10 {
+			sleep();
+			fmt.Println("\nCorrecto.");
+			if respaldo {
+				archivoAgregar(sesion, "\nCorrecto.");
+			}
+			var tmpSuma int;
+			for _, numero := range numeros {
+				tmpSuma += numero;
+			}
+			if tmpSuma == 0 {
+				sleep();
+				prompt := fmt.Sprintf("Colocamos el %d, y terminamos con el ejercicio.", tmpTotal);
+				fmt.Println(prompt);
+				if respaldo {
+					archivoAgregar(sesion, prompt);
+				}
+				numeroString := fmt.Sprintf("%d", tmpTotal);
+				ejercicio.lineaResultado.prefix(numeroString);
+				sleep();
+				prompt = fmt.Sprintf("\n%s%s", ejercicio.lineaLlevamos.construir(), "<--- Llevamos");
+				fmt.Println(prompt);
+				if respaldo {
+					archivoAgregar(sesion, prompt);
+				}
+				ejercicio.mostrarSuma(sesion, respaldo);
+				os.Exit(0);
+			}
+// CONTINUAR EN LA LINEA 185 DE RUST/sum_rust/lib.rs
+		}
 	}
 }
 
