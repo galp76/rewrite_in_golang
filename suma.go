@@ -162,11 +162,6 @@ func suma(operandos []string, sesion string, respaldo bool) {
 				numeroString := fmt.Sprintf("%d", tmpTotal);
 				ejercicio.lineaResultado.prefix(numeroString);
 				sleep();
-				prompt = fmt.Sprintf("\n%s%s", ejercicio.lineaLlevamos.construir(), "<--- Llevamos");
-				fmt.Println(prompt);
-				if respaldo {
-					archivoAgregar(sesion, prompt);
-				}
 				ejercicio.mostrarSuma(sesion, respaldo);
 				os.Exit(0);
 			}
@@ -193,10 +188,10 @@ func suma(operandos []string, sesion string, respaldo bool) {
 		}
 		ejercicio.lineaResultado.prefix(strconv.Itoa(tmpTotal % 10));
 		sleep();
-		ejercicio.mostrarSuma(sesion, respaldo);
 		if !ejercicio.mostrarLlevamos {
 			ejercicio.mostrarLlevamos = true;
 		}
+		ejercicio.mostrarSuma(sesion, respaldo);
 		total /= 10;
 	}
 }

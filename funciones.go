@@ -16,6 +16,7 @@ func sleep() {
 func archivoAgregar(sesion, data string) {
 	// No se maneja el error para no interrumpir el ejercicio
 	archivoSesion, _ := os.OpenFile(sesion, os.O_APPEND|os.O_WRONLY, 0);
+	data = fmt.Sprintf("%s\n", data);
 	archivoSesion.WriteString(data);
 	archivoSesion.Close();
 }

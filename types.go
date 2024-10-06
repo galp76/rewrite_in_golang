@@ -77,7 +77,7 @@ func nuevaSuma(operandos []string) Suma {
 func (ejercicio Suma) mostrarSuma(sesion string, respaldo bool) {
 	var prompt string;
 	if ejercicio.mostrarLlevamos {
-		prompt = fmt.Sprintf("\n%s\n", ejercicio.lineaLlevamos.construir());
+		prompt = fmt.Sprintf("\n%s%s", ejercicio.lineaLlevamos.construir(), "<--- Llevamos");
 		fmt.Println(prompt);
 		if respaldo {
 			archivoAgregar(sesion, prompt);
