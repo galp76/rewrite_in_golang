@@ -129,7 +129,7 @@ func suma(operandos []string, sesion string, respaldo bool) {
 		}
 		sleep();
 		prompt2 := fmt.Sprintf("\nCuanto es %s?", tmpString[:len(tmpString) - 3]);
-		fmt.Println(prompt2);
+		compararValorSuma(tmpTotal, prompt2, sesion, respaldo);
 		if ejercicio.mostrarLlevamos {
 			sleep();
 			fmt.Println("\nCorrecto.");
@@ -139,7 +139,7 @@ func suma(operandos []string, sesion string, respaldo bool) {
 			sleep();
 			prompt2 = fmt.Sprintf("Y con %d que llevamos cuanto es?", llevamos);
 			tmpTotal += llevamos;
-			compararValor(tmpTotal, prompt2, sesion, respaldo);
+			compararValorSuma(tmpTotal, prompt2, sesion, respaldo);
 		}
 		llevamos = tmpTotal / 10;
 		if total >= 10 {
@@ -170,8 +170,34 @@ func suma(operandos []string, sesion string, respaldo bool) {
 				ejercicio.mostrarSuma(sesion, respaldo);
 				os.Exit(0);
 			}
-// CONTINUAR EN LA LINEA 185 DE RUST/sum_rust/lib.rs
+			ejercicio.lineaLlevamos.prefix(strconv.Itoa(llevamos));
+			sleep();
+            prompt = fmt.Sprintf("Colocamos el %d y llevamos %d.", tmpTotal % 10, tmpTotal / 10);
+			fmt.Println(prompt);
+			if respaldo {
+				archivoAgregar(sesion, prompt);
+			}
+			sleep();
+			prompt = "Continuamos con el ejercicio.";
+			fmt.Println(prompt);
+			if respaldo {
+				archivoAgregar(sesion, prompt);
+			}
+		} else {
+			sleep();
+			prompt = "\nCorrecto, hemos terminado con el ejercicio.";
+			fmt.Println(prompt);
+			if respaldo {
+				archivoAgregar(sesion, prompt);
+			}
 		}
+		ejercicio.lineaResultado.prefix(strconv.Itoa(tmpTotal % 10));
+		sleep();
+		ejercicio.mostrarSuma(sesion, respaldo);
+		if !ejercicio.mostrarLlevamos {
+			ejercicio.mostrarLlevamos = true;
+		}
+		total /= 10;
 	}
 }
 
