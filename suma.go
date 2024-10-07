@@ -3,7 +3,6 @@ package main
 import (
 	"fmt"
 	"time"
-	"os"
 	"strings"
 	"strconv"
 )
@@ -40,7 +39,10 @@ func obtenerEntradaUsuarioSuma(prompt string, operador string, sesion string, re
 				archivoAgregar(sesion, prompt2);
 			}
 			sleep();
-			os.Exit(0);
+			
+			// este return es para indicar qque no se terminó el ejercicio en el caso del módulo Tareas
+			// y que no se marque como ejercicio hecho
+			return "000";
 		}
 		var repetir = false;
 		for i := 0; i < len(entrada); i++ {
@@ -77,9 +79,14 @@ func obtenerEntradaUsuarioSuma(prompt string, operador string, sesion string, re
 	return entrada;
 }
 
-func compararValorSuma(tmpTotal int, prompt string, sesion string, respaldo bool) {
+func compararValorSuma(tmpTotal int, prompt string, sesion string, respaldo bool) int {
 	for {
 		entradaUsuario := obtenerEntradaUsuarioSuma(prompt, "", sesion, respaldo);
+		// si entradaUsuario == "000" el usuario eligio no terminar el ejercicio, y en el caso
+		// de que sea una tarea, no se debe marcar como ejercicio hecho
+		if entradaUsuario == "000" {
+			return 1;
+		}
 		// no se maneja el error porque se sabe que entradaUsuario es un numero
 		numero, _ := strconv.Atoi(entradaUsuario);
 		if numero == tmpTotal {
@@ -94,9 +101,13 @@ func compararValorSuma(tmpTotal int, prompt string, sesion string, respaldo bool
 			sleep();
 		}
 	}
+
+	return 0;
 }
 
-func suma(operandos []string, sesion string, respaldo bool) {
+// retorna 0 si el ejercicio se terminó correctamente, y retorna 1
+// si el usuario decidió no terminar el ejercicio
+func suma(operandos []string, sesion string, respaldo bool) int {
 	var total int;
 	for _, item := range operandos {
 		numero, _ := strconv.Atoi(item);
@@ -129,7 +140,10 @@ func suma(operandos []string, sesion string, respaldo bool) {
 		}
 		sleep();
 		prompt2 := fmt.Sprintf("\nCuanto es %s?", tmpString[:len(tmpString) - 3]);
-		compararValorSuma(tmpTotal, prompt2, sesion, respaldo);
+		control := compararValorSuma(tmpTotal, prompt2, sesion, respaldo);
+		if control == 1 {
+			return 1;
+		}
 		if ejercicio.mostrarLlevamos {
 			sleep();
 			fmt.Println("\nCorrecto.");
@@ -139,7 +153,10 @@ func suma(operandos []string, sesion string, respaldo bool) {
 			sleep();
 			prompt2 = fmt.Sprintf("Y con %d que llevamos cuanto es?", llevamos);
 			tmpTotal += llevamos;
-			compararValorSuma(tmpTotal, prompt2, sesion, respaldo);
+			control := compararValorSuma(tmpTotal, prompt2, sesion, respaldo);
+			if control == 1 {
+				return 1;
+			}
 		}
 		llevamos = tmpTotal / 10;
 		if total >= 10 {
@@ -163,7 +180,7 @@ func suma(operandos []string, sesion string, respaldo bool) {
 				ejercicio.lineaResultado.prefix(numeroString);
 				sleep();
 				ejercicio.mostrarSuma(sesion, respaldo);
-				return;
+				return 0;
 			}
 			ejercicio.lineaLlevamos.prefix(strconv.Itoa(llevamos));
 			sleep();
@@ -194,9 +211,11 @@ func suma(operandos []string, sesion string, respaldo bool) {
 		ejercicio.mostrarSuma(sesion, respaldo);
 		total /= 10;
 	}
+
+	return 0;
 }
 
-func mainSuma(sesion string, respaldo bool) {
+func mainSuma(sesion string, respaldo bool) int {
 	var operandos []string;
 	sleep();
 	prompt := "\nEn cualquier momento puedes introducir la letra \"s\" si no deseas terminar el ejercicio.\n\nPor favor escribe la operación sin espacios, letras ni caracteres especiales.\n\nEjemplo:\n\t12345+6789+12345+78965\n";
@@ -236,5 +255,7 @@ func mainSuma(sesion string, respaldo bool) {
 	}
 
 	sleep();
-	suma(operandos, sesion, respaldo);
+	control := suma(operandos, sesion, respaldo);
+
+	return control;
 }

@@ -16,7 +16,13 @@ func practica(sesion string, respaldo bool) {
 		if entradaUsuario != 0 && entradaUsuario <= len(opciones) {
 			switch entradaUsuario {
 				case 1:
-					mainSuma(sesion, respaldo);
+					control := mainSuma(sesion, respaldo);
+					// este if/else hay que pasarlo al modulo tareas cuando se implemente
+					if control == 0 {
+						fmt.Println("El ejercicio fue hecho adecuadamente.");
+					} else {
+						fmt.Println("El usuario decicio no terminar el ejercicio.");
+					}
 				default:
 					sleep();
 					prompt = "\nPor los momentos solamante está implementada la opción 1.";
