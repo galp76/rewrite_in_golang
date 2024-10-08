@@ -19,10 +19,12 @@ func practica(sesion string, respaldo bool) {
 					control := mainSuma(sesion, respaldo);
 					// este if/else hay que pasarlo al modulo tareas cuando se implemente
 					if control == 0 {
-						fmt.Println("El ejercicio fue hecho adecuadamente.");
+						fmt.Println("\nEl ejercicio fue hecho adecuadamente.");
 					} else {
-						fmt.Println("El usuario decicio no terminar el ejercicio.");
+						fmt.Println("\nEl usuario decidio no terminar el ejercicio.");
 					}
+				case 2:
+					mainResta(sesion, respaldo);
 				default:
 					sleep();
 					prompt = "\nPor los momentos solamante está implementada la opción 1.";

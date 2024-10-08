@@ -21,9 +21,9 @@ func obtenerEntradaUsuarioSuma(prompt string, operador string, sesion string, re
 				archivoAgregar(sesion, "\nHubo un error leyendo la información.\n");
 			}
 			time.Sleep(1 * time.Second);
-			fmt.Println("\nIndica la opción nuevamente.\n");
+			fmt.Println(prompt);
 			if respaldo {
-				archivoAgregar(sesion, "\nIndica la opción nuevamente.\n");
+				archivoAgregar(sesion, prompt);
 			}
 			continue;
 		}
