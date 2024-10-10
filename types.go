@@ -98,3 +98,11 @@ func (ejercicio Suma) mostrarSuma(sesion string, respaldo bool) {
 	}
 
 }
+
+// AQUI COMIENZA LA DEFINICION Y LAS FUNCIONES DEL struct RESTA
+type Resta struct {
+	mostrarMinuendoMod bool
+	minuendoModificado Linea
+	operandos []Linea
+	lineaResultado Linea
+}

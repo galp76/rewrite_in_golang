@@ -143,5 +143,24 @@ func mainResta(sesion string, respaldo bool) {
 		}
 		break;
 	}
-// SE LLEGO HASTA LA LINEA 40 DE RUST/subtraction_rust/main.rs
+	longitudOriginal := len(operandos);
+	if len(operandos) > 2 {
+		sleep();
+		prompt = "\nVamos a realizar el siguiente ejercicio:";
+		fmt.Println(prompt);
+		if respaido {
+			archivoAgregar(sesion, prompt);
+		}
+		sleep();
+// OOOOOJJJJOOOOOO HAY QUE IMPLEMENTAR EL struct RESTA
+		ejercicio.mostrarResta(sesion, respaldo);
+		sleep();
+		prompt = "\nPero primero vamos a totalizar los sustraendos.";
+		fmt.Println(prompt);
+		if respaldo {
+			archivoAgregar(sesion, prompt);
+		}
+		sleep();
+// LLEGAMOS HASTA LA LINEA 51 DE RUST/subtraction_rust/main.rs		
+	}
 }
