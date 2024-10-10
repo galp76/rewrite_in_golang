@@ -148,7 +148,7 @@ func mainResta(sesion string, respaldo bool) {
 		sleep();
 		prompt = "\nVamos a realizar el siguiente ejercicio:";
 		fmt.Println(prompt);
-		if respaido {
+		if respaldo {
 			archivoAgregar(sesion, prompt);
 		}
 		sleep();

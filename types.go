@@ -106,3 +106,20 @@ type Resta struct {
 	operandos []Linea
 	lineaResultado Linea
 }
+
+func nuevaResta(operandos []string) Resta {
+	var resultado Resta;
+	resultado.minuendoModificado = nuevaLinea(" ", 15, "", 5, " ");
+	longitud := len(operandos[0]);
+	resultado.operandos = append(resultado.operandos, nuevaLinea(" ", 15 - len(operandos[0]), operandos[0], 3, "-"));
+	for i := 1; i < len(operandos); i++ {
+		if len(operandos[i]) > longitud {
+			longitud = len(operandos[i]);
+		}
+		resultado.operandos = append(resultado.operandos, nuevaLinea(" ", 15 - len(operandos[i]), operandos[i], 5, " "));
+	}
+	resultado.operandos = append(resultado.operandos, nuevaLinea(" ", 15 - longitud, strings.Repeat("-", longitud), 5, " "));
+	resultado.lineaResultado = nuevaLinea(" ", 15, "", 5, " ");
+
+	return resultado;
+}
