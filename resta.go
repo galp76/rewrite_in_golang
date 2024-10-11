@@ -5,6 +5,7 @@ import (
 	"strings"
 	"time"
 	"strconv"
+	"os"
 )
 
 func obtenerEntradaUsuarioResta(prompt string, operador string, sesion string, respaldo bool) string {
@@ -223,8 +224,59 @@ func resta(operandos []string, longitudOriginal int, sesion string, respaldo boo
 	var numeros [2]int;
 	numeros[0], _ = strconv.Atoi(operandos[0]);
 	numeros[1], _ = strconv.Atoi(operandos[1]);
-	fmt.Println(ejercicio);
-	fmt.Println(numeros);
+	// longitudmaxima: para controlar el "while" principal
+	longitudMaxima := 0;
+	for _, item := range operandos {
+		if len(item) > longitudMaxima {
+			longitudMaxima = len(item);
+		}
+	}
+	total := numeros[0] - numeros[1];
+	var prompt string;
+	if total < 0 {
+		prompt = fmt.Sprintf("\nEl resultado es negativo: %s.", total);
+		fmt.Println(prompt);
+		if respaldo {
+			archivoAgregar(sesion, prompt);
+		}	
+		sleep();
+		prompt = "Verifica el ejercicio e intenta nuevamente.";
+		fmt.Println(prompt);
+		if respaldo {
+			archivoAgregar(sesion, prompt);
+		}	
+		os.Exit(0);
+	}
+	contadorMinuendoModificado := 0;
+	sleep();
+	if longitudOriginal == 2 {
+		prompt = "\nVamos a realizar el siguiente ejercicio:";
+	} else {
+		prompt = "\nAhora continuamos con la resta:";
+	}
+	fmt.Println(prompt);
+	if respaldo {
+		archivoAgregar(sesion, prompt);
+	}
+	sleep();
+	ejercicio.mostrarResta(sesion, respaldo);
+	for longitudMaxima > 0 {
+		totalTemporal := numeros[0]%10 - numeros[1]%10;
+		stringTemporal := fmt.Sprintf("%s - %s", numeros[0]510, numeros[1]%10);
+		if totalTemporal < 0 {
+			if !ejercicio.mostrarMinuendoMod {
+				ejercicio.mostrarMinuendoMod = true;
+				ejercicio.minuendoModificado.prefix(" ");
+			}
+			sleep();
+            prompt = fmt.Sprintf("\nComo %s es menor que %s, pedimos prestado a la izquierda, y continuamos:", numeros[0]%10, numeros[1]%10);
+			fmt.Printf(prompt);
+			if respaldo {
+				archivoAgregar(sesion, prompt);
+			}
+// HAY QUE ESCRIBIR MODIFY_MINUEND PARA DESPUES CONTINUAR EN LA LINEA 146 DE RUST/subtraction/lib.rs
+		}
+	}
 }
 
 func mainResta(sesion string, respaldo bool) {
