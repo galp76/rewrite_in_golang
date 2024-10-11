@@ -17,17 +17,33 @@ func practica(sesion string, respaldo bool) {
 			switch entradaUsuario {
 				case 1:
 					control := mainSuma(sesion, respaldo);
-					// este if/else hay que pasarlo al modulo tareas cuando se implemente
+					// OOJJJJOOO: este if/else hay que pasarlo al modulo tareas cuando se implemente
+					var prompt string;
 					if control == 0 {
-						fmt.Println("\nEl ejercicio fue hecho adecuadamente.");
+						prompt = "\nEl ejercicio fue hecho adecuadamente.";
 					} else {
-						fmt.Println("\nEl usuario decidio no terminar el ejercicio.");
+						prompt = "\nEl usuario decidio no terminar el ejercicio.";
+					}
+					fmt.Println(prompt);
+					if respaldo {
+						archivoAgregar(sesion, prompt);
 					}
 				case 2:
-					mainResta(sesion, respaldo);
+					control := mainResta(sesion, respaldo);
+					// OOJJJOOO: este if/else hay que pasarlo al modulo tareas cuando se implemente
+					var prompt string;
+					if control == 0 {
+						prompt = "\nEl ejercicio fue hecho adecuadamente.";
+					} else {
+						prompt = "\nEl usuario decidio no terminar el ejercicio.";
+					}
+					fmt.Println(prompt);
+					if respaldo {
+						archivoAgregar(sesion, prompt);
+					}
 				default:
 					sleep();
-					prompt = "\nPor los momentos solamante está implementada la opción 1.";
+					prompt = "\nPor los momentos solamante están implementadas las opciones 1 y 2.";
 					fmt.Println(prompt);
 					if respaldo {
 						archivoAgregar(sesion, prompt);

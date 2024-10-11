@@ -126,7 +126,7 @@ func nuevaResta(operandos []string) Resta {
 func (ejercicio Resta) mostrarResta(sesion string, respaldo bool) {
 	var prompt string;
 	if ejercicio.mostrarMinuendoMod {
-		prompt = fmt.Sprintf("\n%s%s", ejercicio.minuendoModificado.construir(), "<--- Minuendo modificado");
+		prompt = fmt.Sprintf("\n%s%s\n", ejercicio.minuendoModificado.construir(), "<--- Minuendo modificado");
 		fmt.Printf(prompt);
 		if respaldo {
 			archivoAgregar(sesion, prompt);

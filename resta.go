@@ -6,6 +6,7 @@ import (
 	"time"
 	"strconv"
 	"os"
+	"math"
 )
 
 func obtenerEntradaUsuarioResta(prompt string, operador string, sesion string, respaldo bool) string {
@@ -218,7 +219,31 @@ func sumaResta(operandos []string, sesion string, respaldo bool) int {
 	return 0;
 }
 
-func resta(operandos []string, longitudOriginal int, sesion string, respaldo bool) {
+func modificarMinuendo(lineaMinuendoModificado *Linea, minuendo int) (int, int) {
+	contador := 0;
+	numero := minuendo;
+	numero /= 10;
+	var minuendoModificado string;
+	for {
+		if numero % 10 == 0 {
+			contador += 1;
+			lineaMinuendoModificado.prefix("9");
+			minuendoModificado = fmt.Sprintf("%s%s", "9", minuendoModificado);
+			numero /= 10;
+		} else {
+			numeroTemporal := fmt.Sprintf("%d", (numero % 10) - 1);
+			lineaMinuendoModificado.prefix(numeroTemporal)
+			minuendoModificado = fmt.Sprintf("%s%s", numeroTemporal, minuendoModificado);
+			break;
+		}
+	}
+	numeroTemporal, _ := strconv.Atoi(minuendoModificado);
+	nuevoMinuendo := (minuendo / int(math.Pow(10, float64(len(minuendoModificado) + 1)))) * int(math.Pow(10, float64(len(minuendoModificado) + 1))) + (numeroTemporal * 10) + (minuendo % 10);
+
+	return nuevoMinuendo, contador
+}
+
+func resta(operandos []string, longitudOriginal int, sesion string, respaldo bool) int {
 	ejercicio := nuevaResta(operandos);
 	// No se maneja el error porque se sabe que ambos operandos son numeros
 	var numeros [2]int;
@@ -262,24 +287,69 @@ func resta(operandos []string, longitudOriginal int, sesion string, respaldo boo
 	ejercicio.mostrarResta(sesion, respaldo);
 	for longitudMaxima > 0 {
 		totalTemporal := numeros[0]%10 - numeros[1]%10;
-		stringTemporal := fmt.Sprintf("%s - %s", numeros[0]510, numeros[1]%10);
+		stringTemporal := fmt.Sprintf("%d - %d", numeros[0]%10, numeros[1]%10);
 		if totalTemporal < 0 {
 			if !ejercicio.mostrarMinuendoMod {
 				ejercicio.mostrarMinuendoMod = true;
 				ejercicio.minuendoModificado.prefix(" ");
 			}
 			sleep();
-            prompt = fmt.Sprintf("\nComo %s es menor que %s, pedimos prestado a la izquierda, y continuamos:", numeros[0]%10, numeros[1]%10);
+            prompt = fmt.Sprintf("\nComo %d es menor que %d, pedimos prestado a la izquierda, y continuamos:", numeros[0]%10, numeros[1]%10);
 			fmt.Printf(prompt);
 			if respaldo {
 				archivoAgregar(sesion, prompt);
 			}
-// HAY QUE ESCRIBIR MODIFY_MINUEND PARA DESPUES CONTINUAR EN LA LINEA 146 DE RUST/subtraction/lib.rs
+			numeros[0], contadorMinuendoModificado = modificarMinuendo(&ejercicio.minuendoModificado, numeros[0]);
+			stringTemporal = fmt.Sprintf("%s%s", "1", stringTemporal);
+			totalTemporal += 10;
+		} else {
+			contadorMinuendoModificado -= 1;
+			if contadorMinuendoModificado < 0 {
+				ejercicio.minuendoModificado.prefix(" ");
+			}
 		}
+		numeros[0] /= 10;
+		numeros[1] /= 10;
+		prompt = fmt.Sprintf("\nCuanto es %s?", stringTemporal);
+		sleep();
+		control := compararValorResta(totalTemporal, prompt, sesion, respaldo);
+		// si control == 1, el usuario introdujo "s" para salir del sistema, la funcion
+		// retorna 1 para indicarle a practica.go que no marque el ejercicio como resuelto
+		if control == 1 {
+			return 1;
+		}
+		if longitudMaxima > 1 {
+			sleep();
+			prompt = "\nCorrecto."
+			fmt.Println(prompt);
+			if respaldo {
+				archivoAgregar(sesion, prompt);
+			}
+			sleep();
+			prompt = "Continuamos con el ejercicio.";
+			fmt.Println(prompt);
+			if respaldo {
+				archivoAgregar(sesion, prompt);
+			}
+		} else {
+			sleep();
+			prompt = "\nCorrecto, hemos terminado con el ejercicio.";
+			fmt.Println(prompt);
+			if respaldo {
+				archivoAgregar(sesion, prompt);
+			}
+		}
+		numeroTemporal := fmt.Sprintf("%d", totalTemporal % 10);
+		ejercicio.lineaResultado.prefix(numeroTemporal);
+		sleep();
+		ejercicio.mostrarResta(sesion, respaldo);
+		longitudMaxima -= 1;
 	}
+
+	return 0;
 }
 
-func mainResta(sesion string, respaldo bool) {
+func mainResta(sesion string, respaldo bool) int {
 	var operandos []string;
 	sleep();
 	prompt := "\nPor favor escribe la operación, sin espacios, letras ni caracteres especiales.\n\nEn cualquier momento puedes introducir la letra \"s\" si no deseas terminar con el ejercicio.\n\nEjemplo:\n\t12345-6789-789-145\n";
@@ -344,5 +414,7 @@ func mainResta(sesion string, respaldo bool) {
 		operandos[1] = strconv.Itoa(minuendo);
 	}
 
-	resta(operandos[:2], longitudOriginal, sesion, respaldo);
+	control := resta(operandos[:2], longitudOriginal, sesion, respaldo);
+
+	return control;
 }

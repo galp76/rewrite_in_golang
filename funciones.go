@@ -39,6 +39,9 @@ func obtenerEntradaUsuario(sesion string, respaldo bool) int {
 		}
 
 		if strings.ToLower(entradaUsuario) == "s" {
+			if respaldo {
+				archivoAgregar(sesion, "s");
+			}
 			sleep();
 			fmt.Println("\nSaliendo del sistema...");
 			if respaldo {
