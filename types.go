@@ -96,7 +96,6 @@ func (ejercicio Suma) mostrarSuma(sesion string, respaldo bool) {
 	if respaldo {
 		archivoAgregar(sesion, prompt);
 	}
-
 }
 
 // AQUI COMIENZA LA DEFINICION Y LAS FUNCIONES DEL struct RESTA
@@ -122,4 +121,28 @@ func nuevaResta(operandos []string) Resta {
 	resultado.lineaResultado = nuevaLinea(" ", 15, "", 5, " ");
 
 	return resultado;
+}
+
+func (ejercicio Resta) mostrarResta(sesion string, respaldo bool) {
+	var prompt string;
+	if ejercicio.mostrarMinuendoMod {
+		prompt = fmt.Sprintf("\n%s%s", ejercicio.minuendoModificado.construir(), "<--- Minuendo modificado");
+		fmt.Printf(prompt);
+		if respaldo {
+			archivoAgregar(sesion, prompt);
+		}
+	}
+	fmt.Println("");
+	for i, _ := range ejercicio.operandos {
+		prompt = fmt.Sprintf("%s", ejercicio.operandos[i].construir());
+		fmt.Println(prompt);
+		if respaldo {
+			archivoAgregar(sesion, prompt);
+		}
+	}
+	prompt = ejercicio.lineaResultado.construir();
+	fmt.Println(prompt);
+	if respaldo {
+		archivoAgregar(sesion, prompt);
+	}
 }

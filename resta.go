@@ -105,6 +105,128 @@ func compararValorResta(tmpTotal int, prompt string, sesion string, respaldo boo
 	return 0;
 }
 
+// ****** La función sumaResta hace falta para el caso de más de 1 sustraendo
+
+// retorna 0 si el ejercicio se terminó correctamente, y retorna 1
+// si el usuario decidió no terminar el ejercicio
+func sumaResta(operandos []string, sesion string, respaldo bool) int {
+	var total int;
+	for _, item := range operandos {
+		numero, _ := strconv.Atoi(item);
+		total += numero;
+	}
+	ejercicio := nuevaSuma(operandos);
+	prompt := "\nVamos a realizar el siguiente ejercicio:";
+	fmt.Println(prompt);
+	if respaldo {
+		archivoAgregar(sesion, prompt);
+	}
+	sleep();
+	ejercicio.mostrarSuma(sesion, respaldo);
+	var numeros []int;
+	for _, item := range operandos {
+		numero, _ := strconv.Atoi(item);
+		numeros = append(numeros, numero);
+	}
+	var llevamos int = 0;
+	for total != 0 {
+		var tmpTotal int;
+		var tmpString string;
+		for i := 0; i < len(numeros); i++ {
+			numero := numeros[i];
+			tmpTotal += numero % 10;
+			tmpNumero := fmt.Sprintf("%d + ", numero % 10);
+			tmpString += tmpNumero;
+			numero /= 10;
+			numeros[i] = numero;
+		}
+		sleep();
+		prompt2 := fmt.Sprintf("\nCuanto es %s?", tmpString[:len(tmpString) - 3]);
+		control := compararValorSuma(tmpTotal, prompt2, sesion, respaldo);
+		if control == 1 {
+			return 1;
+		}
+		if ejercicio.mostrarLlevamos {
+			sleep();
+			fmt.Println("\nCorrecto.");
+			if respaldo {
+				archivoAgregar(sesion, "\nCorrecto.");
+			}
+			sleep();
+			prompt2 = fmt.Sprintf("Y con %d que llevamos cuanto es?", llevamos);
+			tmpTotal += llevamos;
+			control := compararValorSuma(tmpTotal, prompt2, sesion, respaldo);
+			if control == 1 {
+				return 1;
+			}
+		}
+		llevamos = tmpTotal / 10;
+		if total >= 10 {
+			sleep();
+			fmt.Println("\nCorrecto.");
+			if respaldo {
+				archivoAgregar(sesion, "\nCorrecto.");
+			}
+			var tmpSuma int;
+			for _, numero := range numeros {
+				tmpSuma += numero;
+			}
+			if tmpSuma == 0 {
+				sleep();
+				prompt := fmt.Sprintf("Colocamos el %d, y terminamos con el ejercicio.", tmpTotal);
+				fmt.Println(prompt);
+				if respaldo {
+					archivoAgregar(sesion, prompt);
+				}
+				numeroString := fmt.Sprintf("%d", tmpTotal);
+				ejercicio.lineaResultado.prefix(numeroString);
+				sleep();
+				ejercicio.mostrarSuma(sesion, respaldo);
+				return 0;
+			}
+			ejercicio.lineaLlevamos.prefix(strconv.Itoa(llevamos));
+			sleep();
+            prompt = fmt.Sprintf("Colocamos el %d y llevamos %d.", tmpTotal % 10, tmpTotal / 10);
+			fmt.Println(prompt);
+			if respaldo {
+				archivoAgregar(sesion, prompt);
+			}
+			sleep();
+			prompt = "Continuamos con el ejercicio.";
+			fmt.Println(prompt);
+			if respaldo {
+				archivoAgregar(sesion, prompt);
+			}
+		} else {
+			sleep();
+			prompt = "\nCorrecto, hemos terminado con el ejercicio.";
+			fmt.Println(prompt);
+			if respaldo {
+				archivoAgregar(sesion, prompt);
+			}
+		}
+		ejercicio.lineaResultado.prefix(strconv.Itoa(tmpTotal % 10));
+		sleep();
+		if !ejercicio.mostrarLlevamos {
+			ejercicio.mostrarLlevamos = true;
+		}
+		ejercicio.mostrarSuma(sesion, respaldo);
+		total /= 10;
+	}
+
+	return 0;
+}
+
+func resta(operandos []string, longitudOriginal int, sesion string, respaldo bool) {
+	ejercicio := nuevaResta(operandos);
+	// No se maneja el error porque se sabe que ambos operandos son numeros
+	var numeros [2]int;
+	numeros[0], _ = strconv.Atoi(operandos[0]);
+	numeros[1], _ = strconv.Atoi(operandos[1]);
+	fmt.Println(ejercicio);
+	fmt.Println(numeros);
+}
+
 func mainResta(sesion string, respaldo bool) {
 	var operandos []string;
 	sleep();
@@ -143,6 +265,7 @@ func mainResta(sesion string, respaldo bool) {
 		}
 		break;
 	}
+	ejercicio := nuevaResta(operandos);
 	longitudOriginal := len(operandos);
 	if len(operandos) > 2 {
 		sleep();
@@ -152,7 +275,6 @@ func mainResta(sesion string, respaldo bool) {
 			archivoAgregar(sesion, prompt);
 		}
 		sleep();
-// OOOOOJJJJOOOOOO HAY QUE IMPLEMENTAR EL struct RESTA
 		ejercicio.mostrarResta(sesion, respaldo);
 		sleep();
 		prompt = "\nPero primero vamos a totalizar los sustraendos.";
@@ -161,6 +283,14 @@ func mainResta(sesion string, respaldo bool) {
 			archivoAgregar(sesion, prompt);
 		}
 		sleep();
-// LLEGAMOS HASTA LA LINEA 51 DE RUST/subtraction_rust/main.rs		
+		sumaResta(operandos[1:], sesion, respaldo);
+		var minuendo int;
+		for i := 1; i < len(operandos); i++ {
+			numero, _ := strconv.Atoi(operandos[i]);
+			minuendo += numero;
+		}
+		operandos[1] = strconv.Itoa(minuendo);
 	}
+
+	resta(operandos[:2], longitudOriginal, sesion, respaldo);
 }
