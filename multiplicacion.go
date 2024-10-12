@@ -5,11 +5,11 @@ import (
 	"strings"
 	"time"
 	"strconv"
-	"os"
-	"math"
+//	"os"
+//	"math"
 )
 
-func obtenerEntradaUsuarioResta(prompt string, operador string, sesion string, respaldo bool) string {
+func obtenerEntradaUsuarioMultiplicacion(prompt string, operador string, sesion string, respaldo bool) string {
 	var entrada string;
 	fmt.Println(prompt);
 	if respaldo {
@@ -81,9 +81,9 @@ func obtenerEntradaUsuarioResta(prompt string, operador string, sesion string, r
 	return entrada;
 }
 
-func compararValorResta(tmpTotal int, prompt string, sesion string, respaldo bool) int {
+func compararValorMultiplicacion(tmpTotal int, prompt string, sesion string, respaldo bool) int {
 	for {
-		entradaUsuario := obtenerEntradaUsuarioResta(prompt, "", sesion, respaldo);
+		entradaUsuario := obtenerEntradaUsuarioMultiplicacion(prompt, "", sesion, respaldo);
 		// si entradaUsuario == "000" el usuario eligio no terminar el ejercicio, y en el caso
 		// de que sea una tarea, no se debe marcar como ejercicio hecho
 		if entradaUsuario == "000" {
@@ -107,11 +107,11 @@ func compararValorResta(tmpTotal int, prompt string, sesion string, respaldo boo
 	return 0;
 }
 
-// ****** La función sumaResta hace falta para el caso de más de 1 sustraendo
+// ****** La función sumaMultiplicacion hace falta para totalizar al final
 
 // retorna 0 si el ejercicio se terminó correctamente, y retorna 1
 // si el usuario decidió no terminar el ejercicio
-func sumaResta(operandos []string, sesion string, respaldo bool) int {
+func sumaMultiplicacion(operandos []string, sesion string, respaldo bool) int {
 	var total int;
 	for _, item := range operandos {
 		numero, _ := strconv.Atoi(item);
@@ -219,145 +219,20 @@ func sumaResta(operandos []string, sesion string, respaldo bool) int {
 	return 0;
 }
 
-func modificarMinuendo(lineaMinuendoModificado *Linea, minuendo int) (int, int) {
-	contador := 0;
-	numero := minuendo;
-	numero /= 10;
-	var minuendoModificado string;
-	for {
-		if numero % 10 == 0 {
-			contador += 1;
-			lineaMinuendoModificado.prefix("9");
-			minuendoModificado = fmt.Sprintf("%s%s", "9", minuendoModificado);
-			numero /= 10;
-		} else {
-			numeroTemporal := fmt.Sprintf("%d", (numero % 10) - 1);
-			lineaMinuendoModificado.prefix(numeroTemporal)
-			minuendoModificado = fmt.Sprintf("%s%s", numeroTemporal, minuendoModificado);
-			break;
-		}
-	}
-	numeroTemporal, _ := strconv.Atoi(minuendoModificado);
-	nuevoMinuendo := (minuendo / int(math.Pow(10, float64(len(minuendoModificado) + 1)))) * int(math.Pow(10, float64(len(minuendoModificado) + 1))) + (numeroTemporal * 10) + (minuendo % 10);
-
-	return nuevoMinuendo, contador
-}
-
-func resta(operandos []string, longitudOriginal int, sesion string, respaldo bool) int {
-	ejercicio := nuevaResta(operandos);
-	// No se maneja el error porque se sabe que ambos operandos son numeros
-	var numeros [2]int;
-	numeros[0], _ = strconv.Atoi(operandos[0]);
-	numeros[1], _ = strconv.Atoi(operandos[1]);
-	// longitudmaxima: para controlar el "while" principal
-	longitudMaxima := 0;
-	for _, item := range operandos {
-		if len(item) > longitudMaxima {
-			longitudMaxima = len(item);
-		}
-	}
-	total := numeros[0] - numeros[1];
-	var prompt string;
-	if total < 0 {
-		prompt = fmt.Sprintf("\nEl resultado es negativo: %s.", total);
-		fmt.Println(prompt);
-		if respaldo {
-			archivoAgregar(sesion, prompt);
-		}	
-		sleep();
-		prompt = "Verifica el ejercicio e intenta nuevamente.";
-		fmt.Println(prompt);
-		if respaldo {
-			archivoAgregar(sesion, prompt);
-		}	
-		os.Exit(0);
-	}
-	contadorMinuendoModificado := 0;
-	sleep();
-	if longitudOriginal == 2 {
-		prompt = "\nVamos a realizar el siguiente ejercicio:";
-	} else {
-		prompt = "\nAhora continuamos con la resta:";
-	}
-	fmt.Println(prompt);
-	if respaldo {
-		archivoAgregar(sesion, prompt);
-	}
-	sleep();
-	ejercicio.mostrarResta(sesion, respaldo);
-	for longitudMaxima > 0 {
-		totalTemporal := numeros[0]%10 - numeros[1]%10;
-		stringTemporal := fmt.Sprintf("%d - %d", numeros[0]%10, numeros[1]%10);
-		if totalTemporal < 0 {
-			if !ejercicio.mostrarMinuendoMod {
-				ejercicio.mostrarMinuendoMod = true;
-				ejercicio.minuendoModificado.prefix(" ");
-			}
-			sleep();
-            prompt = fmt.Sprintf("\nComo %d es menor que %d, pedimos prestado a la izquierda, y continuamos:", numeros[0]%10, numeros[1]%10);
-			fmt.Printf(prompt);
-			if respaldo {
-				archivoAgregar(sesion, prompt);
-			}
-			numeros[0], contadorMinuendoModificado = modificarMinuendo(&ejercicio.minuendoModificado, numeros[0]);
-			stringTemporal = fmt.Sprintf("%s%s", "1", stringTemporal);
-			totalTemporal += 10;
-		} else {
-			contadorMinuendoModificado -= 1;
-			if contadorMinuendoModificado < 0 {
-				ejercicio.minuendoModificado.prefix(" ");
-			}
-		}
-		numeros[0] /= 10;
-		numeros[1] /= 10;
-		prompt = fmt.Sprintf("\nCuanto es %s?", stringTemporal);
-		sleep();
-		control := compararValorResta(totalTemporal, prompt, sesion, respaldo);
-		// si control == 1, el usuario introdujo "s" para salir del sistema, la funcion
-		// retorna 1 para indicarle a practica.go que no marque el ejercicio como resuelto
-		if control == 1 {
-			return 1;
-		}
-		if longitudMaxima > 1 {
-			sleep();
-			prompt = "\nCorrecto."
-			fmt.Println(prompt);
-			if respaldo {
-				archivoAgregar(sesion, prompt);
-			}
-			sleep();
-			prompt = "Continuamos con el ejercicio.";
-			fmt.Println(prompt);
-			if respaldo {
-				archivoAgregar(sesion, prompt);
-			}
-		} else {
-			sleep();
-			prompt = "\nCorrecto, hemos terminado con el ejercicio.";
-			fmt.Println(prompt);
-			if respaldo {
-				archivoAgregar(sesion, prompt);
-			}
-		}
-		numeroTemporal := fmt.Sprintf("%d", totalTemporal % 10);
-		ejercicio.lineaResultado.prefix(numeroTemporal);
-		sleep();
-		ejercicio.mostrarResta(sesion, respaldo);
-		longitudMaxima -= 1;
-	}
-
+func multiplicacion(operandos []string, sesion string, respaldo bool) int {
+// HAY QUE IMPLEMENTAR EL struct Multiplication PARA SEGUIR EN LA LINEA 109 DE RUST/multi.../lib.rs	
 	return 0;
 }
 
-func mainResta(sesion string, respaldo bool) int {
+func mainMultiplicacion(sesion string, respaldo bool) int {
 	var operandos []string;
 	sleep();
-	prompt := "\nPor favor escribe la operación, sin espacios, letras ni caracteres especiales.\n\nEn cualquier momento puedes introducir la letra \"s\" si no deseas terminar con el ejercicio.\n\nEjemplo:\n\t12345-6789-789-145\n";
+	prompt := "\nPor favor escribe la operación, sin espacios, letras ni caracteres especiales.\n\nEn cualquier momento puedes introducir la letra \"s\" si no deseas terminar con el ejercicio.\n\nEjemplo:\n\t12345*678\n";
 	for {
-		operacion := obtenerEntradaUsuarioResta(prompt, "-", sesion, respaldo);
-		operandos = strings.Split(operacion, "-");
+		operacion := obtenerEntradaUsuarioMultiplicacion(prompt, "*", sesion, respaldo);
+		operandos = strings.Split(operacion, "*");
 
-		if len(operandos) == 1 {
+		if len(operandos) != 2 {
 			sleep();
 			advertencia := "\nLa cantidad de operandos no es la correcta.";
 			fmt.Println(advertencia);
@@ -387,34 +262,7 @@ func mainResta(sesion string, respaldo bool) int {
 		}
 		break;
 	}
-	ejercicio := nuevaResta(operandos);
-	longitudOriginal := len(operandos);
-	if len(operandos) > 2 {
-		sleep();
-		prompt = "\nVamos a realizar el siguiente ejercicio:";
-		fmt.Println(prompt);
-		if respaldo {
-			archivoAgregar(sesion, prompt);
-		}
-		sleep();
-		ejercicio.mostrarResta(sesion, respaldo);
-		sleep();
-		prompt = "\nPero primero vamos a totalizar los sustraendos.";
-		fmt.Println(prompt);
-		if respaldo {
-			archivoAgregar(sesion, prompt);
-		}
-		sleep();
-		sumaResta(operandos[1:], sesion, respaldo);
-		var minuendo int;
-		for i := 1; i < len(operandos); i++ {
-			numero, _ := strconv.Atoi(operandos[i]);
-			minuendo += numero;
-		}
-		operandos[1] = strconv.Itoa(minuendo);
-	}
 
-	control := resta(operandos[:2], longitudOriginal, sesion, respaldo);
-
+	control := multiplicacion(operandos, sesion, respaldo);
 	return control;
 }

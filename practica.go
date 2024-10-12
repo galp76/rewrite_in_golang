@@ -41,6 +41,19 @@ func practica(sesion string, respaldo bool) {
 					if respaldo {
 						archivoAgregar(sesion, prompt);
 					}
+				case 3:
+					control := mainMultiplicacion(sesion, respaldo);
+					// OOJJJOOO: este if/else hay que pasarlo al modulo tareas cuando se implemente
+					var prompt string;
+					if control == 0 {
+						prompt = "\nEl ejercicio fue hecho adecuadamente.";
+					} else {
+						prompt = "\nEl usuario decidio no terminar el ejercicio.";
+					}
+					fmt.Println(prompt);
+					if respaldo {
+						archivoAgregar(sesion, prompt);
+					}
 				default:
 					sleep();
 					prompt = "\nPor los momentos solamante están implementadas las opciones 1 y 2.";

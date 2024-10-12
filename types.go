@@ -146,3 +146,26 @@ func (ejercicio Resta) mostrarResta(sesion string, respaldo bool) {
 		archivoAgregar(sesion, prompt);
 	}
 }
+
+// AQUI COMIENZAN LA DEFINIION Y LAS FUNCIONES DEL struct Multiplicacion
+
+type Multiplicacion struct {
+	mostrarLlevamos bool
+	lineaLlevamos Linea
+	operandos []Linea
+	resultados []Linea
+}
+
+func nuevaMultiplicacion(operandos []string) Multiplicacion {
+	var resultado Multiplicacion;
+	resultado.lineaLlevamos = nuevaLinea(" ", 15, "", 5, " ");
+	longitud := len(operandos[0]);
+	resultado.operandos = append(resultado.operandos, nuevaLinea(" ", 15 - len(operandos[0]), operandos[0], 3, "*"));
+	if longitud < len(operandos[1]) {
+		longitud = len(operandos[1]);
+	}
+	resultado.operandos = append(resultado.operandos, nuevaLinea(" ", 15 - len(operandos[1]), operandos[1], 3, " "));
+	resultado.operandos = append(resultado.operandos, nuevaLinea(" ", 15 - longitud, strings.Repeat("-", longitud), 5, " "));
+
+	return resultado;
+}
