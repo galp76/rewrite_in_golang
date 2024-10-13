@@ -220,7 +220,74 @@ func sumaMultiplicacion(operandos []string, sesion string, respaldo bool) int {
 }
 
 func multiplicacion(operandos []string, sesion string, respaldo bool) int {
-// HAY QUE IMPLEMENTAR EL struct Multiplication PARA SEGUIR EN LA LINEA 109 DE RUST/multi.../lib.rs	
+	ejercicio := nuevaMultiplicacion(operandos);
+	var numeros []int;
+	for _, item := range operandos {
+		// no se maneja el error porque se sabe que 'item' es un numero
+		numeroTemporal, _ := strconv.Atoi(item);
+		numeros = append(numeros, numeroTemporal);
+	}
+	longitudSegundoOperando := len(operandos[1]);
+	contador := 0;
+	llevamos := ((numeros[0]%10) * (numeros[1]%10)) / 10;
+	ejercicio.lineaLlevamos.prefix(" ");
+	sleep();
+	prompt := "\nVamos a realizar el siguiente ejercicio:";
+	fmt.Println(prompt);
+	if respaldo {
+		archivoAgregar(sesion, prompt);
+	}
+	sleep();
+	ejercicio.mostrarMultiplicacion(sesion, respaldo);
+	for longitudSegundoOperando - contador != 0 {
+		valorFijado := numeros[1] % 10;
+		primerOperando := numeros[0];
+		for primerOperando != 0 {
+			totalTemporal := (primerOperando % 10) * valorFijado;
+			stringTemporal := fmt.Sprintf("%d * %d", primerOperando % 10, valorFijado);
+			primerOperando /= 10;
+			prompt = fmt.Sprintf("\nCuanto es %s?", stringTemporal);
+			sleep();
+			compararValor(totalTemporal, prompt, sesion, respaldo);
+			if ejercicio.mostrarLlevamos {
+				sleep();
+				prompt = "\nCorrecto.";
+				fmt.Println(prompt);
+				if respaldo {
+					archivoAgregar(sesion, prompt);
+				}
+				sleep();
+				prompt = fmt.Sprintf("\nY con %d que llevamos cuanto es?", llevamos);
+				valorTemporal += llevamos;
+				compararValor(totalTemporal, prompt, sesion, respaldo);
+			}
+			llevamos = totalTemporal / 10;
+			if !((longitudSegundoOperando - contador == 0) && primerOperando == 0) {
+				ejercicio.lineaLlevamos.prefix(strconv.Itoa(llevamos));
+				sleep();
+				prompt = "\nCorrecto.";
+				fmt.Println(prompt);
+				if respaldo {
+					archivoAgregar(sesion, prompt);
+				}
+				sleep();
+				if primerOperando != 0 {
+					prompt = fmt.Sprintf("Colocamos el %d y llevamos %d.", totalTemporal % 10, totalTemporal / 10);
+					fmt.Println(prompt);
+					if respaldo {
+						archivoAgregar(sesion, prompt);
+					}
+				} else {
+					prompt = fmt.Sprintf("Colocamos el %d, y continuamos con las multiplicaciones correspondientes al siguiente número: %d", totalTemporal, (numeros[0] / 10) % 10);
+					fmt.Println(prompt);
+					if respaldo {
+						archivoAgregar(sesion, prompt);
+					}
+				}
+			}
+		}
+	}
+
 	return 0;
 }
 

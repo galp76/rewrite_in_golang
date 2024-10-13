@@ -127,7 +127,7 @@ func (ejercicio Resta) mostrarResta(sesion string, respaldo bool) {
 	var prompt string;
 	if ejercicio.mostrarMinuendoMod {
 		prompt = fmt.Sprintf("\n%s%s\n", ejercicio.minuendoModificado.construir(), "<--- Minuendo modificado");
-		fmt.Printf(prompt);
+		fmt.Printf("%s", prompt);
 		if respaldo {
 			archivoAgregar(sesion, prompt);
 		}
@@ -147,8 +147,7 @@ func (ejercicio Resta) mostrarResta(sesion string, respaldo bool) {
 	}
 }
 
-// AQUI COMIENZAN LA DEFINIION Y LAS FUNCIONES DEL struct Multiplicacion
-
+// AQUI COMIENZAN LA DEFINICION Y LAS FUNCIONES DEL struct Multiplicacion
 type Multiplicacion struct {
 	mostrarLlevamos bool
 	lineaLlevamos Linea
@@ -168,4 +167,30 @@ func nuevaMultiplicacion(operandos []string) Multiplicacion {
 	resultado.operandos = append(resultado.operandos, nuevaLinea(" ", 15 - longitud, strings.Repeat("-", longitud), 5, " "));
 
 	return resultado;
+}
+
+func (ejercicio Multiplicacion) mostrarMultiplicacion(sesion string, respaldo bool) {
+	var prompt string;
+	if ejercicio.mostrarLlevamos {
+		prompt = fmt.Sprintf("\n%s%s\n", ejercicio.lineaLlevamos.construir(), "<--- Llevamos");
+		fmt.Printf("%s", prompt);
+		if respaldo {
+			archivoAgregar(sesion, prompt);
+		}
+	}
+	fmt.Println("");
+	for i, _ := range ejercicio.operandos {
+		prompt = ejercicio.operandos[i].construir();
+		fmt.Println(prompt);
+		if respaldo {
+			archivoAgregar(sesion, prompt);
+		}
+	}
+	for i, _ := range ejercicio.resultados {
+		prompt = ejercicio.resultados[i].construir();
+		fmt.Println(prompt);
+		if respaldo {
+			archivoAgregar(sesion, prompt);
+		}
+	}
 }
