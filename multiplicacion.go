@@ -221,6 +221,7 @@ func sumaMultiplicacion(operandos []string, sesion string, respaldo bool) int {
 
 func multiplicacion(operandos []string, sesion string, respaldo bool) int {
 	ejercicio := nuevaMultiplicacion(operandos);
+	lineaResultadoTemporal := nuevaLinea(" ", 15, "", 5, " ");
 	var numeros []int;
 	for _, item := range operandos {
 		// no se maneja el error porque se sabe que 'item' es un numero
@@ -248,7 +249,10 @@ func multiplicacion(operandos []string, sesion string, respaldo bool) int {
 			primerOperando /= 10;
 			prompt = fmt.Sprintf("\nCuanto es %s?", stringTemporal);
 			sleep();
-			compararValor(totalTemporal, prompt, sesion, respaldo);
+			control := compararValorMultiplicacion(totalTemporal, prompt, sesion, respaldo);
+			if control == 1 {
+				return 1;
+			}
 			if ejercicio.mostrarLlevamos {
 				sleep();
 				prompt = "\nCorrecto.";
@@ -258,11 +262,14 @@ func multiplicacion(operandos []string, sesion string, respaldo bool) int {
 				}
 				sleep();
 				prompt = fmt.Sprintf("\nY con %d que llevamos cuanto es?", llevamos);
-				valorTemporal += llevamos;
-				compararValor(totalTemporal, prompt, sesion, respaldo);
+				totalTemporal += llevamos;
+				control := compararValorMultiplicacion(totalTemporal, prompt, sesion, respaldo);
+				if control == 1 {
+					return 1;
+				}
 			}
 			llevamos = totalTemporal / 10;
-			if !((longitudSegundoOperando - contador == 0) && primerOperando == 0) {
+			if !((longitudSegundoOperando - contador == 1) && primerOperando == 0) {
 				ejercicio.lineaLlevamos.prefix(strconv.Itoa(llevamos));
 				sleep();
 				prompt = "\nCorrecto.";
@@ -278,17 +285,77 @@ func multiplicacion(operandos []string, sesion string, respaldo bool) int {
 						archivoAgregar(sesion, prompt);
 					}
 				} else {
-					prompt = fmt.Sprintf("Colocamos el %d, y continuamos con las multiplicaciones correspondientes al siguiente número: %d", totalTemporal, (numeros[0] / 10) % 10);
+					prompt = fmt.Sprintf("Colocamos el %d, y continuamos con las multiplicaciones correspondientes al siguiente número: %d", totalTemporal, (numeros[1] / 10) % 10);
 					fmt.Println(prompt);
 					if respaldo {
 						archivoAgregar(sesion, prompt);
 					}
 				}
+				sleep();
+				prompt = "Continuamos con el ejercicio.";
+				fmt.Println(prompt);
+				if respaldo {
+					archivoAgregar(sesion, prompt);
+				}
+			} else {
+				sleep();
+				prompt = fmt.Sprintf("\nCorrecto, colocamos el %d y hemos terminado con las multiplicaciones.", totalTemporal);
+				fmt.Println(prompt);
+				if respaldo {
+					archivoAgregar(sesion, prompt);
+				}
+			}
+			sleep();
+			ejercicio.mostrarLlevamos = true;
+			if primerOperando != 0 {
+				lineaResultadoTemporal.prefix(strconv.Itoa(totalTemporal % 10));
+			} else {
+				// para que no imprima la linea Llevamos cuando primerOperando se hace cero
+				ejercicio.mostrarLlevamos = false;
+				lineaResultadoTemporal.prefix(strconv.Itoa(totalTemporal));
+			}
+			ejercicio.mostrarMultiplicacion(sesion, respaldo);
+			prompt = lineaResultadoTemporal.construir();
+			fmt.Println(prompt);
+			if respaldo {
+				archivoAgregar(sesion, prompt);
 			}
 		}
+
+		ejercicio.resultados = append(ejercicio.resultados, lineaResultadoTemporal);
+		lineaResultadoTemporal = nuevaLinea(" ", 15, "", 5, " ");
+		ejercicio.lineaLlevamos = nuevaLinea(" ", 15, "", 5, " ");
+		ejercicio.lineaLlevamos.prefix(" ");
+		contador++;
+		for i := 0; i < contador; i++ {
+			lineaResultadoTemporal.prefix(" ");
+		}
+		numeros[1] /= 10;
+	}
+	
+	sleep();
+	if len(ejercicio.resultados) == 1 {
+		prompt = "\nHemos terminado con el ejercicio.";
+		fmt.Println(prompt);
+		if respaldo {
+			archivoAgregar(sesion, prompt);
+		}
+		return 0;
 	}
 
-	return 0;
+	var operandosParaLaSuma []string;
+	for _, item := range ejercicio.resultados {
+		operandosParaLaSuma = append(operandosParaLaSuma, strings.ReplaceAll(item.contenido, " ", "0"));
+	}
+
+	prompt = "\nAhora tenemos que sumar los resultados parciales.";
+	fmt.Println(prompt);
+	if respaldo {
+		archivoAgregar(sesion, prompt);
+	}
+
+	control := sumaMultiplicacion(operandosParaLaSuma, sesion, respaldo);
+	return control;
 }
 
 func mainMultiplicacion(sesion string, respaldo bool) int {
