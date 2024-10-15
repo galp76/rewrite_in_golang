@@ -89,7 +89,11 @@ func main() {
 					archivoAgregar(sesion, prompt);
 				}
 				sleep();
-				os.Exit(0);
+				control := tarea(sesion, respaldo, usuario);
+				if control == 1 {
+					prompt = "\nPor favor indica una de las siguientes opciones:\n\n  1. Práctica.\n  2. Tarea.\n  3. Salir del sistema.\n\nOpción:";
+					continue;
+				}
 			case 3:
 				prompt = "\nSaliendo del sistema.\n";
 				fmt.Println(prompt);
