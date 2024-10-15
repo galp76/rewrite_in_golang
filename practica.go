@@ -16,7 +16,7 @@ func practica(sesion string, respaldo bool) {
 		if entradaUsuario != 0 && entradaUsuario <= len(opciones) {
 			switch entradaUsuario {
 				case 1:
-					control := mainSuma(sesion, respaldo);
+					control := mainSuma(sesion, respaldo, false, "");
 					// OOJJJJOOO: este if/else hay que pasarlo al modulo tareas cuando se implemente
 					var prompt string;
 					if control == 0 {

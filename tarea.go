@@ -60,7 +60,7 @@ func tarea(sesion string, respaldo bool, usuario string) int {
 	var entradaUsuario int;
 	for {
 		entradaUsuario = obtenerEntradaUsuario(sesion, respaldo);
-		if entradaUsuario >= 1 && entradaUsuario < len(archivos) {
+		if entradaUsuario >= 1 && entradaUsuario <= len(archivos) {
 			prompt = "\nSe muestran los ejercicios de la lista seleccionada:\n";
 			fmt.Println(prompt);
 			if respaldo {
@@ -115,8 +115,10 @@ func tarea(sesion string, respaldo bool, usuario string) int {
     fileScanner := bufio.NewScanner(readFile);
     fileScanner.Split(bufio.ScanLines);
 	i := 0;
+	var ejercicios []string;
     for fileScanner.Scan() {
         var line = fileScanner.Text();
+		ejercicios = append(ejercicios, line);
 		parts := strings.Split(line, " ");
 		if i < 9 {
 			prompt = fmt.Sprintf("  %d. %s: %s - %s", i + 1, operaciones[parts[0]], parts[1], parts[2]);
@@ -129,6 +131,40 @@ func tarea(sesion string, respaldo bool, usuario string) int {
 		}
 		i++;
     }
+
+	for _, linea := range ejercicios {
+		partes := strings.Split(linea, " ");
+		if partes[2] == "Resuelto" {
+			continue;
+		}
+		sleep();
+		prompt = fmt.Sprintf("\n\nSiguiente ejercicio -> %s -> %s", operaciones[partes[0]], partes[1]);
+		fmt.Println(prompt);
+		if respaldo {
+			archivoAgregar(sesion, prompt);
+		}
+
+		switch partes[0] {
+		case "1":
+			control := mainSuma(sesion, respaldo, true, partes[1]);
+			if control == 0 {
+				prompt = "\nEl ejercicio fue hecho adecuadamente.";
+			} else {
+				prompt = "\nEl usuario decidio no terminar el ejercicio.";
+			}
+			fmt.Println(prompt);
+			if respaldo {
+				archivoAgregar(sesion, prompt);
+			}
+		default:
+			prompt = "\nIntroduce \"s\" para salir del sistema, o presiona ENTER para continuar con el siguiente ejercicio.\n\nOpción:";
+			fmt.Println(prompt);
+			if respaldo {
+				archivoAgregar(sesion, prompt);
+			}
+			_ = obtenerEntradaUsuario(sesion, respaldo);
+		}
+	}
 
 	return 0;
 }
