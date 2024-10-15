@@ -29,7 +29,7 @@ func practica(sesion string, respaldo bool) {
 						archivoAgregar(sesion, prompt);
 					}
 				case 2:
-					control := mainResta(sesion, respaldo);
+					control := mainResta(sesion, respaldo, false, "");
 					// OOJJJOOO: este if/else hay que pasarlo al modulo tareas cuando se implemente
 					var prompt string;
 					if control == 0 {
@@ -42,7 +42,7 @@ func practica(sesion string, respaldo bool) {
 						archivoAgregar(sesion, prompt);
 					}
 				case 3:
-					control := mainMultiplicacion(sesion, respaldo);
+					control := mainMultiplicacion(sesion, respaldo, false, "");
 					// OOJJJOOO: este if/else hay que pasarlo al modulo tareas cuando se implemente
 					var prompt string;
 					if control == 0 {

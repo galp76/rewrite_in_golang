@@ -349,43 +349,48 @@ func resta(operandos []string, longitudOriginal int, sesion string, respaldo boo
 	return 0;
 }
 
-func mainResta(sesion string, respaldo bool) int {
+func mainResta(sesion string, respaldo bool, tarea bool, operacion string) int {
 	var operandos []string;
 	sleep();
-	prompt := "\nPor favor escribe la operación, sin espacios, letras ni caracteres especiales.\n\nEn cualquier momento puedes introducir la letra \"s\" si no deseas terminar con el ejercicio.\n\nEjemplo:\n\t12345-6789-789-145\n";
-	for {
-		operacion := obtenerEntradaUsuarioResta(prompt, "-", sesion, respaldo);
-		operandos = strings.Split(operacion, "-");
+	var prompt string;
+	if !tarea {
+		prompt = "\nPor favor escribe la operación, sin espacios, letras ni caracteres especiales.\n\nEn cualquier momento puedes introducir la letra \"s\" si no deseas terminar con el ejercicio.\n\nEjemplo:\n\t12345-6789-789-145\n";
+		for {
+			operacion := obtenerEntradaUsuarioResta(prompt, "-", sesion, respaldo);
+			operandos = strings.Split(operacion, "-");
 
-		if len(operandos) == 1 {
-			sleep();
-			advertencia := "\nLa cantidad de operandos no es la correcta.";
-			fmt.Println(advertencia);
-			if respaldo {
-				archivoAgregar(sesion, advertencia);
-			}
-			sleep();
-			continue;
-		}
-
-		var repetir bool;
-		for _, item := range operandos {
-			if len(item) == 0 {
+			if len(operandos) == 1 {
 				sleep();
-				advertencia := "\nLa cantidad de operadores no es la correcta.";
+				advertencia := "\nLa cantidad de operandos no es la correcta.";
 				fmt.Println(advertencia);
 				if respaldo {
 					archivoAgregar(sesion, advertencia);
 				}
 				sleep();
-				repetir = true;
-				break;
+				continue;
 			}
+
+			var repetir bool;
+			for _, item := range operandos {
+				if len(item) == 0 {
+					sleep();
+					advertencia := "\nLa cantidad de operadores no es la correcta.";
+					fmt.Println(advertencia);
+					if respaldo {
+						archivoAgregar(sesion, advertencia);
+					}
+					sleep();
+					repetir = true;
+					break;
+				}
+			}
+			if repetir {
+				continue;
+			}
+			break;
 		}
-		if repetir {
-			continue;
-		}
-		break;
+	} else {
+		operandos = strings.Split(operacion, "-");
 	}
 	ejercicio := nuevaResta(operandos);
 	longitudOriginal := len(operandos);

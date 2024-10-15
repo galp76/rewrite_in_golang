@@ -148,6 +148,10 @@ func tarea(sesion string, respaldo bool, usuario string) int {
 		switch partes[0] {
 		case "1":
 			control = mainSuma(sesion, respaldo, true, partes[1]);
+		case "2":
+			control = mainResta(sesion, respaldo, true, partes[1]);
+		case "3":
+			control = mainMultiplicacion(sesion, respaldo, true, partes[1]);
 		default:
 			prompt = "\nIntroduce \"s\" para salir del sistema, o presiona ENTER para continuar con el siguiente ejercicio.\n\nOpción:";
 			fmt.Println(prompt);
@@ -168,7 +172,7 @@ func tarea(sesion string, respaldo bool, usuario string) int {
 			archivoAgregar(sesion, prompt);
 		}
 		sleep();
-		prompt = "\nIntroduce \"s\" para salir del sistema, o presiona ENTER para continuar con el siguiente ejercicio.\n\nOpción:";
+		prompt = "\nIntroduce \"s\" para salir del sistema, o cualquier otro caracter para continuar con el siguiente ejercicio.\n\nOpción:";
 		fmt.Println(prompt);
 		if respaldo {
 			archivoAgregar(sesion, prompt);

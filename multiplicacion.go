@@ -358,43 +358,47 @@ func multiplicacion(operandos []string, sesion string, respaldo bool) int {
 	return control;
 }
 
-func mainMultiplicacion(sesion string, respaldo bool) int {
+func mainMultiplicacion(sesion string, respaldo bool, tarea bool, operacion string) int {
 	var operandos []string;
 	sleep();
-	prompt := "\nPor favor escribe la operación, sin espacios, letras ni caracteres especiales.\n\nEn cualquier momento puedes introducir la letra \"s\" si no deseas terminar con el ejercicio.\n\nEjemplo:\n\t12345*678\n";
-	for {
-		operacion := obtenerEntradaUsuarioMultiplicacion(prompt, "*", sesion, respaldo);
-		operandos = strings.Split(operacion, "*");
+	if !tarea {
+		prompt := "\nPor favor escribe la operación, sin espacios, letras ni caracteres especiales.\n\nEn cualquier momento puedes introducir la letra \"s\" si no deseas terminar con el ejercicio.\n\nEjemplo:\n\t12345*678\n";
+		for {
+			operacion := obtenerEntradaUsuarioMultiplicacion(prompt, "*", sesion, respaldo);
+			operandos = strings.Split(operacion, "*");
 
-		if len(operandos) != 2 {
-			sleep();
-			advertencia := "\nLa cantidad de operandos no es la correcta.";
-			fmt.Println(advertencia);
-			if respaldo {
-				archivoAgregar(sesion, advertencia);
-			}
-			sleep();
-			continue;
-		}
-
-		var repetir bool;
-		for _, item := range operandos {
-			if len(item) == 0 {
+			if len(operandos) != 2 {
 				sleep();
-				advertencia := "\nLa cantidad de operadores no es la correcta.";
+				advertencia := "\nLa cantidad de operandos no es la correcta.";
 				fmt.Println(advertencia);
 				if respaldo {
 					archivoAgregar(sesion, advertencia);
 				}
 				sleep();
-				repetir = true;
-				break;
+				continue;
 			}
+
+			var repetir bool;
+			for _, item := range operandos {
+				if len(item) == 0 {
+					sleep();
+					advertencia := "\nLa cantidad de operadores no es la correcta.";
+					fmt.Println(advertencia);
+					if respaldo {
+						archivoAgregar(sesion, advertencia);
+					}
+					sleep();
+					repetir = true;
+					break;
+				}
+			}
+			if repetir {
+				continue;
+			}
+			break;
 		}
-		if repetir {
-			continue;
-		}
-		break;
+	} else {
+		operandos = strings.Split(operacion, "*");
 	}
 
 	control := multiplicacion(operandos, sesion, respaldo);
