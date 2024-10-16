@@ -106,10 +106,31 @@ func compararValorDivision(tmpTotal int, prompt string, sesion string, respaldo 
 }
 
 func division(operandos []string, sesion string, respaldo bool) int {
-//	ejercicio := nuevaDivision(operandos);
-	fmt.Println("Dentro de division()");
+	var vectorDividendo []string;
+	for i := 0; i < len(operandos[0]); i++ {
+		vectorDividendo = append(vectorDividendo, operandos[0][i:i+1]);
+	}
+	// i: para controlar el que se bajaa en cada iteracion
+	var i int;
+	// numero: el dividendo parcial a usar en cada iteracion
+	numero, _ := strconv.Atoi(vectorDividendo[i]);
+	divisor, _ := strconv.Atoi(operandos[1]);
+	for numero/divisor < 1 {
+		i++;
+		valorTemporal, _ := strconv.Atoi(vectorDividendo[i]);
+		numero = numero * 10 + valorTemporal;
+	}
+	ejercicio := nuevaDivision(operandos, i + 1);
+	sleep();
+	prompt := "\nVamos a realizar el siguiente ejercicio:";
+	fmt.Println(prompt);
+	if respaldo {
+		archivoAgregar(sesion, prompt);
+	}
+	sleep();
+	ejercicio.mostrarDivision(sesion, respaldo);
 
-	return 1;
+	return 0;
 }
 
 func mainDivision(sesion string, respaldo bool, tarea bool, operacion string) int {

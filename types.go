@@ -7,11 +7,11 @@ import (
 
 // AQUI COMIENZAN LA DEFINICION Y LAS FUNCIONES DEL struct LINEA
 type Linea struct {
-	sepIzquierdo string
-	padIzquierdo int
-	contenido string
-	padDerecho int
-	sepDerecho string
+	sepIzquierdo string;
+	padIzquierdo int;
+	contenido string;
+	padDerecho int;
+	sepDerecho string;
 }
 
 func nuevaLinea(sepIzq string, padIzq int, contenido string, padDer int, sepDer string) Linea {
@@ -46,12 +46,17 @@ func (linea *Linea) postfix(nuevo string) {
 	linea.padIzquierdo -= len(nuevo);
 }
 
+func (linea *Linea) reemplazar(nuevo string) {
+	longitud := len(linea.contenido);
+	linea.contenido = fmt.Sprintf("%s%s", strings.Repeat(" ", longitud - len(nuevo)), nuevo);
+}
+
 // AQUI COMIENZA LA DEFINICION Y LAS FUNCIONES DEL struct SUMA
 type Suma struct {
-	mostrarLlevamos bool
-	lineaLlevamos Linea
-	sumandos []Linea
-	lineaResultado Linea
+	mostrarLlevamos bool;
+	lineaLlevamos Linea;
+	sumandos []Linea;
+	lineaResultado Linea;
 }
 
 func nuevaSuma(operandos []string) Suma {
@@ -100,10 +105,10 @@ func (ejercicio Suma) mostrarSuma(sesion string, respaldo bool) {
 
 // AQUI COMIENZA LA DEFINICION Y LAS FUNCIONES DEL struct RESTA
 type Resta struct {
-	mostrarMinuendoMod bool
-	minuendoModificado Linea
-	operandos []Linea
-	lineaResultado Linea
+	mostrarMinuendoMod bool;
+	minuendoModificado Linea;
+	operandos []Linea;
+	lineaResultado Linea;
 }
 
 func nuevaResta(operandos []string) Resta {
@@ -149,10 +154,10 @@ func (ejercicio Resta) mostrarResta(sesion string, respaldo bool) {
 
 // AQUI COMIENZAN LA DEFINICION Y LAS FUNCIONES DEL struct Multiplicacion
 type Multiplicacion struct {
-	mostrarLlevamos bool
-	lineaLlevamos Linea
-	operandos []Linea
-	resultados []Linea
+	mostrarLlevamos bool;
+	lineaLlevamos Linea;
+	operandos []Linea;
+	resultados []Linea;
 }
 
 func nuevaMultiplicacion(operandos []string) Multiplicacion {
@@ -191,6 +196,51 @@ func (ejercicio Multiplicacion) mostrarMultiplicacion(sesion string, respaldo bo
 		fmt.Println(prompt);
 		if respaldo {
 			archivoAgregar(sesion, prompt);
+		}
+	}
+}
+
+// AQUI COMIENZAN LA DEFINICION Y LAS FUNCIONES DEL struct Division
+type Division struct {
+	dividendo Linea;
+	divisor Linea;
+	operaciones []Linea;
+	cociente Linea;
+}
+
+func nuevaDivision(operandos []string, numero int) Division {
+	var resultado Division;
+	resultado.dividendo = nuevaLinea(" ", 5, operandos[0], 1, "|");
+	resultado.divisor = nuevaLinea(" ", 0, operandos[1], 0, " ");
+	resultado.operaciones = append(resultado.operaciones, nuevaLinea(" ", 5, strings.Repeat(" ", numero), len(operandos[0]) - numero, " "));
+	resultado.cociente = nuevaLinea(" ", 0, "", 10, " ");
+
+	return resultado;
+}
+
+func (division Division) mostrarDivision(sesion string, respaldo bool) {
+	prompt := fmt.Sprintf("\n%s%s", division.dividendo.construir(), division.divisor.construir());
+	fmt.Println(prompt);
+	if respaldo {
+		archivoAgregar(sesion, prompt);
+	}
+	prompt = fmt.Sprintf("%s|%s", strings.Repeat(" ", 7 + len(division.dividendo.contenido)), strings.Repeat("-", 5 + len(division.divisor.contenido)));
+	fmt.Println(prompt);
+	if respaldo {
+		archivoAgregar(sesion, prompt);
+	}
+	prompt = fmt.Sprintf("%s|%s", division.operaciones[0].construir(), division.cociente.construir());
+	fmt.Println(prompt);
+	if respaldo {
+		archivoAgregar(sesion, prompt);
+	}
+	if len(division.operaciones) > 1 {
+		for i := 1; i < len(division.operaciones); i++ {
+			prompt = division.operaciones[i].construir();
+			fmt.Println(prompt);
+			if respaldo {
+				archivoAgregar(sesion, prompt);
+			}
 		}
 	}
 }
