@@ -5,8 +5,6 @@ import (
 	"strings"
 	"time"
 	"strconv"
-//	"os"
-//	"math"
 )
 
 func obtenerEntradaUsuarioMultiplicacion(prompt string, operador string, sesion string, respaldo bool) string {

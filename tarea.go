@@ -152,6 +152,8 @@ func tarea(sesion string, respaldo bool, usuario string) int {
 			control = mainResta(sesion, respaldo, true, partes[1]);
 		case "3":
 			control = mainMultiplicacion(sesion, respaldo, true, partes[1]);
+		case "4":
+			control = mainDivision(sesion, respaldo, true, partes[1]);
 		default:
 			prompt = "\nIntroduce \"s\" para salir del sistema, o presiona ENTER para continuar con el siguiente ejercicio.\n\nOpción:";
 			fmt.Println(prompt);

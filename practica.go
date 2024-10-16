@@ -2,7 +2,6 @@ package main
 
 import (
 	"fmt"
-//	"os"
 	"strings"
 )
 
@@ -54,6 +53,8 @@ func practica(sesion string, respaldo bool) {
 					if respaldo {
 						archivoAgregar(sesion, prompt);
 					}
+				case 4:
+					mainDivision(sesion, respaldo, false, "");
 				default:
 					sleep();
 					prompt = "\nPor los momentos solamante están implementadas las opciones 1 y 2.";
