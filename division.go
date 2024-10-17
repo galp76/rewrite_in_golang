@@ -129,8 +129,87 @@ func division(operandos []string, sesion string, respaldo bool) int {
 	}
 	sleep();
 	ejercicio.mostrarDivision(sesion, respaldo);
-
-	return 0;
+	sleep();
+	prompt = fmt.Sprintf("\nPara comenzar, necesitamos un numero que sea mayor o igual a %d.", divisor);
+	fmt.Println(prompt);
+	if respaldo {
+		archivoAgregar(sesion, prompt);
+	}
+	sleep();
+	primeraIteracion := true;
+	// espacios: para controlar el left padding de los dividendos
+	espacios := 0;
+	for {
+		// cocienteTemporal: el cociente temporal a usar en cada iteracion
+		cocienteTemporal := numero / divisor;
+		prompt = fmt.Sprintf("\nNecesitamos un número que multiplicado por %d sea igual o lo más cercano posible a %d.\nCual es ese número?", divisor, numero);
+		compararValorDivision(cocienteTemporal, prompt, sesion, respaldo);
+		ejercicio.cociente.postfix(strconv.Itoa(cocienteTemporal));
+		sleep();
+		prompt = "\nCorrecto.";
+		fmt.Println(prompt);
+		if respaldo {
+			archivoAgregar(sesion, prompt);
+		}
+		sleep();
+		prompt = "\nY cuanto nos queda de residuo?";
+		compararValorDivision(numero % divisor, prompt, sesion, respaldo);
+		sleep();
+		prompt = "\nCorrecto.";
+		fmt.Println(prompt);
+		if respaldo {
+			archivoAgregar(sesion, prompt);
+		}
+		sleep();
+		i++;
+		numero = numero % divisor;
+		espacios = i - len(strconv.Itoa(numero));
+		if i == len(operandos[0]) {
+			prompt = "\nHemos terminado con el ejercicio.";
+			fmt.Println(prompt);
+			if respaldo {
+				archivoAgregar(sesion, prompt);
+			}
+			residuo := nuevaLinea(" ", 5 + espacios, strconv.Itoa(numero), 0, " ");
+			ejercicio.operaciones = append(ejercicio.operaciones, residuo);
+			sleep();
+			ejercicio.mostrarDivision(sesion, respaldo);
+			return 0;
+		}
+		var residuoCero bool;
+		if numero == 0 {
+			residuoCero = true;
+		}
+		switch primeraIteracion {
+		case true:
+			ejercicio.operaciones[0].reemplazar(strconv.Itoa(numero));
+			ejercicio.operaciones[0].postfix(vectorDividendo[i]);
+			primeraIteracion = false;
+			// no se maneja el error porque sabemos que es un numero
+			numeroTemporal, _ := strconv.Atoi(vectorDividendo[i]);
+			numero = numero * 10 + numeroTemporal;
+		case false:
+			var lineaTemporal Linea;
+			if residuoCero {
+				lineaTemporal = nuevaLinea(" ", 5 + espacios, "0", 10, " ");
+				lineaTemporal.postfix(vectorDividendo[i]);
+				// no se nameja el error porque sabemos que es un numero
+				numero, _ = strconv.Atoi(vectorDividendo[i]);
+			} else {
+				numeroTemporal, _ := strconv.Atoi(vectorDividendo[i]);
+				numero = numero * 10 + numeroTemporal;
+				lineaTemporal = nuevaLinea(" ", 5 + espacios, strconv.Itoa(numero), 0, " ");
+			}
+			ejercicio.operaciones = append(ejercicio.operaciones, lineaTemporal);
+		}
+		prompt = fmt.Sprintf("\nBajamos el %s y continuamos.", vectorDividendo[i]);
+		fmt.Println(prompt);
+		if respaldo {
+			archivoAgregar(sesion, prompt);
+		}
+		sleep();
+		ejercicio.mostrarDivision(sesion, respaldo);
+	}
 }
 
 func mainDivision(sesion string, respaldo bool, tarea bool, operacion string) int {

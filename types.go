@@ -26,6 +26,8 @@ func nuevaLinea(sepIzq string, padIzq int, contenido string, padDer int, sepDer 
 }
 
 func (linea Linea) construir() string {
+/*	prompt := fmt.Sprintf("\npadIzquierdo: %d\npadDerecho: %d\n", linea.padIzquierdo, linea.padDerecho);
+	fmt.Println(prompt);*/
 	resultado := fmt.Sprintf("%s%s%s%s%s", 
 		linea.sepIzquierdo,
 		strings.Repeat(" ", linea.padIzquierdo),
@@ -39,16 +41,22 @@ func (linea Linea) construir() string {
 func (linea *Linea) prefix(nuevo string) {
 	linea.contenido = fmt.Sprintf("%s%s", nuevo, linea.contenido);
 	linea.padIzquierdo -= len(nuevo);
+/*	prompt := fmt.Sprintf("\npadIzquierdo: %d\npadDerecho: %d\n", linea.padIzquierdo, linea.padDerecho);
+	fmt.Println(prompt);*/
 }
 
 func (linea *Linea) postfix(nuevo string) {
 	linea.contenido = fmt.Sprintf("%s%s", linea.contenido, nuevo);
-	linea.padIzquierdo -= len(nuevo);
+	linea.padDerecho -= len(nuevo);
+/*	prompt := fmt.Sprintf("\npadIzquierdo: %d\npadDerecho: %d\n", linea.padIzquierdo, linea.padDerecho);
+	fmt.Println(prompt);*/
 }
 
 func (linea *Linea) reemplazar(nuevo string) {
 	longitud := len(linea.contenido);
 	linea.contenido = fmt.Sprintf("%s%s", strings.Repeat(" ", longitud - len(nuevo)), nuevo);
+/*	prompt := fmt.Sprintf("\npadIzquierdo: %d\npadDerecho: %d\n", linea.padIzquierdo, linea.padDerecho);
+	fmt.Println(prompt);*/
 }
 
 // AQUI COMIENZA LA DEFINICION Y LAS FUNCIONES DEL struct SUMA
