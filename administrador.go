@@ -25,12 +25,24 @@ func viewHandler(w http.ResponseWriter, r *http.Request) {
 */
 // de las mias
 func index(w http.ResponseWriter, r *http.Request) {
-	xhtml, _ := cargarHtml("html/index.html");
-	fmt.Fprintf(w, string(xhtml));
+	html, _ := cargarHtml("html/index.html");
+	fmt.Fprintf(w, string(html));
 }
 
-func mainAdministrador() {
+func crearUsuario(w http.ResponseWriter, r *http.Request) {
+	html, _ := cargarHtml("html/crearUsuario.html");
+	fmt.Fprintf(w, string(html));
+}
+
+func procesarNuevoUsuario(w http.ResponseWriter, r *http.Request) {
+	fmt.Fprintln(w, "<h1>Hello World</h1>");
+}
+
+func main() {
 //	http.HandleFunc("/view/", viewHandler);
 	http.HandleFunc("/", index);		// de las mias
+	http.HandleFunc("/crearUsuario", crearUsuario);		// de las mias
+	http.HandleFunc("/procesarNuevoUsuario/", procesarNuevoUsuario);		// de las mias
+	fmt.Println("Iniciando servidor...");
 	log.Fatal(http.ListenAndServe(":8080", nil));
 }

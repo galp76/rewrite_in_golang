@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Main index</title>
+  <title>Menu Administrador</title>
   <style>
     body {
       display: flex;
@@ -45,7 +45,7 @@
 	<div><h3>Usuarios</h3></div>
     <div>
         <button onclick="products()">Mostrar</button>
-        <button onclick="products()">Crear</button>
+        <button onclick="crearUsuario()">Crear</button>
         <button onclick="products()">Borrar</button>
     </div>
     <div class="separator"></div>
@@ -73,6 +73,14 @@
     </div>
   </div>
   <script>
+	function crearUsuario() {
+		window.location.href = 'crearUsuario';
+	}
+
+
+
+
+
     function products() {
 	const url = `products`;
 	window.location.href = url;
