@@ -5,6 +5,7 @@ import (
 	"os"
 	"log"
 	"net/http"
+	"strings"
 )
 
 // de las mias
@@ -29,16 +30,38 @@ func index(w http.ResponseWriter, r *http.Request) {
 	fmt.Fprintf(w, string(html));
 }
 
+// ************** AQUI COMIENZAN LAS FUNCIONES PARA CREAR UN USUARIO ******************
 func crearUsuario(w http.ResponseWriter, r *http.Request) {
-	html, _ := cargarHtml("html/crearUsuario.html");
+	html, _ := cargarHtml("html/usuarios/crearUsuario.html");
 	fmt.Fprintf(w, string(html));
 }
 
-func procesarNuevoUsuario(w http.ResponseWriter, r *http.Request) {
-	fmt.Fprintln(w, "<h1>Hello World</h1>");
+// retorna true si el usuario es nuevo
+func validarNuevoUsuario(usuario string) bool {
+	usuarios, _ := fileToSlice("users.txt");
+	for _, linea := range usuarios {
+		partes := strings.Split(linea, ";");
+		if partes[0] == usuario {
+			return false;
+		}
+	}
+
+	return true;
 }
 
-func main() {
+func procesarNuevoUsuario(w http.ResponseWriter, r *http.Request) {
+	linea := r.URL.Path[len("/procesarNuevoUsuario/"):];
+	datos := strings.Split(linea, "/");
+	if validarNuevoUsuario(datos[0]) {
+		nuevoUsuario := fmt.Sprintf("%s;%s;%s", datos[0], datos[1], datos[2]);
+		archivoAgregar("users.txt", nuevoUsuario);
+//		html, _ := cargarHtml("html/usuarios/crearUsuarioExito.html");
+//		fmt.Fprintln(w, string(html));
+		http.Redirect(w, r, "html/usuarios/crearUsuarioExito.html", 303);
+	}
+}
+
+func mainAdministrador() {
 //	http.HandleFunc("/view/", viewHandler);
 	http.HandleFunc("/", index);		// de las mias
 	http.HandleFunc("/crearUsuario", crearUsuario);		// de las mias

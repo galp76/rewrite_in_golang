@@ -116,3 +116,20 @@ func mostrarOpciones(opciones []string, mostrarPrompt bool, sesion string, respa
 		archivoAgregar(sesion, prompt);
 	}
 }
+
+func fileToSlice(archivo string) ([]string, error) {
+	readFile, err := os.Open(archivo);
+    if err != nil {
+		return nil, err;
+    }
+    fileScanner := bufio.NewScanner(readFile);
+    fileScanner.Split(bufio.ScanLines);
+	var resultado []string;
+	for fileScanner.Scan() {
+        var line = fileScanner.Text();
+		resultado = append(resultado, line);
+    }
+    readFile.Close();
+
+	return resultado, nil;
+}
