@@ -129,6 +129,12 @@ func usuarioBorrado(w http.ResponseWriter, r *http.Request) {
 	fmt.Fprintf(w, string(html));
 }
 
+// ********** AQUI EMPIEZAN LAS FUNCIONES DE MOSTRAR USUARIO **************************
+func mostrarUsuario(w http.ResponseWriter, r *http.Request) {
+	html, _ := cargarHtml("html/usuarios/mostrarUsuario/mostrarUsuario.html");
+	fmt.Fprintf(w, string(html));
+}
+
 func mainAdministrador() {
 //	http.HandleFunc("/view/", viewHandler);
 	http.HandleFunc("/", index);		// de las mias
@@ -143,6 +149,8 @@ func mainAdministrador() {
 	http.HandleFunc("/procesarBorrarUsuario/", procesarBorrarUsuario);	// de las mias
 	http.HandleFunc("/usuarioNoExiste", usuarioNoExiste);	// de las mias
 	http.HandleFunc("/usuarioBorrado", usuarioBorrado);	// de las mias
+
+	http.HandleFunc("/mostrarUsuario", mostrarUsuario);	// de las mias
 
 	fmt.Println("Iniciando servidor...");
 	log.Fatal(http.ListenAndServe(":8080", nil));

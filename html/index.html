@@ -44,7 +44,7 @@
   <div class="container">
 	<div><h3>Usuarios</h3></div>
     <div>
-        <button onclick="products()">Mostrar</button>
+        <button onclick="mostrarUsuario()">Mostrar</button>
         <button onclick="crearUsuario()">Crear</button>
         <button onclick="borrarUsuario()">Borrar</button>
     </div>
@@ -73,6 +73,10 @@
     </div>
   </div>
   <script>
+	function mostrarUsuario() {
+		window.location.href = 'mostrarUsuario';
+	}
+
 	function crearUsuario() {
 		window.location.href = 'crearUsuario';
 	}

@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Mostrar usuarios</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 20px;
+      background-color: #f4f4f4; /* Light background */
+    }
+
+    h1 {
+      color: #333;
+      text-align: center;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 5px;
+      font-weight: bold;
+    }
+
+    input[type="text"],
+    input[type="number"],
+    textarea {
+      width: 200px;
+      padding: 10px;
+      margin-bottom: 15px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+    }
+
+    input[type="file"] {
+      margin-bottom: 15px;
+    }
+
+    textarea {
+      resize: vertical; /* Allow resizing only vertically */
+      height: 100px;
+    }
+
+    select {
+      width: 200px;
+      padding: 10px;
+      margin-bottom: 15px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+    }
+
+    input[type="submit"] {
+      background-color: #4CAF50;
+      color: white;
+      padding: 12px 20px;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      width: 100%;
+    }
+
+    #submitButton {
+      width: 150px;
+      height: 60px;
+      font-size: 16px;
+      background-color: #4CAF50; /* Ejemplo de color verde */
+      color: white;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>Mostrar usuarios</h1>
+
+    <h2>Indique el grupo:</h2>
+    <label for="unitOfMeasure">Grupo:</label><br>
+    <select id="grupo" >
+      <option value="caracas">Caracas</option>
+      <option value="barquisimeto">Barquisimeto</option>
+    </select><br><br>
+
+	<button id="submitButton" onclick="processForm()">Mostrar usuarios</button><br><br><br>
+    <button id="submitButton" onclick="menuPrincipal()">Menu principal</button><br>
+
+
+  <script>
+      function processForm() {
+		  const usuario = document.getElementById('usuario').value;
+		  const grupo = document.getElementById('grupo').value;
+
+		  const url = `procesarBorrarUsuario/${encodeURIComponent(usuario)}/${encodeURIComponent(grupo)}`;
+
+		  window.location.href = url;
+      }
+
+	  function menuPrincipal() {
+		  window.location.href = 'menuPrincipal()';
+	  }
+
+  </script>
+</body>
+</html>
