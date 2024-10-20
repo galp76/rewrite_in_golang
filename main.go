@@ -29,7 +29,6 @@ func main() {
 		fmt.Println("\nContinuamos al módulo de administración de usuarios.\n");
 		time.Sleep(1 * time.Second);
 		mainAdministrador();
-//		os.Exit(0);
 	}
 
 	var respaldo = false;

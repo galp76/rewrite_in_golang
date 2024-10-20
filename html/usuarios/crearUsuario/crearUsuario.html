@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Borrar usuario</title>
+  <title>Crear usuario</title>
   <style>
     body {
       font-family: Arial, sans-serif;
@@ -46,7 +46,6 @@
       margin-bottom: 15px;
       border: 1px solid #ccc;
       border-radius: 4px;
-      appearance: none; /* Remove default dropdown arrow on some browsers */
     }
 
     input[type="submit"] {
@@ -60,9 +59,9 @@
     }
 
     #submitButton {
-      width: 200px;
-      height: 90px;
-      font-size: 22px;
+      width: 150px;
+      height: 60px;
+      font-size: 16px;
       background-color: #4CAF50; /* Ejemplo de color verde */
       color: white;
       border: none;
@@ -73,7 +72,7 @@
 </head>
 <body>
 
-  <h1>Borrar usuario</h1>
+  <h1>Crear nuevo usuario</h1>
 
     <h2>Informacion del usuario</h2>
     <label for="productName">Nombre:</label><br>
@@ -88,22 +87,25 @@
       <option value="barquisimeto">Barquisimeto</option>
     </select><br><br>
 
-	<button id="submitButton" onclick="processForm()">Borrar</button><br><br><br>
+	<button id="submitButton" onclick="processForm()">Crear usuario</button><br><br><br>
     <button id="submitButton" onclick="menuPrincipal()">Menu principal</button><br>
 
 
   <script>
       function processForm() {
 		  const usuario = document.getElementById('usuario').value;
+		  const clave = document.getElementById('clave').value;
 		  const grupo = document.getElementById('grupo').value;
 
-		  const url = `borrarUsuario/${encodeURIComponent(usuario)}/${encodeURIComponent(grupo)}`;
+		  const url = `procesarNuevoUsuario/${encodeURIComponent(usuario)}/${encodeURIComponent(clave)}/${encodeURIComponent(grupo)}`;
 
 		  window.location.href = url;
       }
 
 	  function menuPrincipal() {
-		  window.location.href = 'menuPrincipal()';
+		  const url = 'menuPrincipal';
+
+		  window.location.href = url;
 	  }
 
   </script>
