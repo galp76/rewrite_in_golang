@@ -32,6 +32,39 @@ func index(w http.ResponseWriter, r *http.Request) {
 
 // ************** AQUI COMIENZAN LAS FUNCIONES PARA CREAR UN USUARIO ******************
 func crearUsuario(w http.ResponseWriter, r *http.Request) {
+	fmt.Println("Dentro.");
+	archivo, err := os.Create("html/usuarios/crearUsuario/crearUsuarioTemp.html");
+	if err != nil {
+		log.Fatal(err);
+	}
+	archivo.Close();
+	fmt.Println("1");
+	primeraParte, err2 := fileToSlice("html/usuarios/crearUsuario/crearUsuarioPrimeraMitad.html");
+	if err2 != nil {
+		log.Fatal(err);
+	}
+	for _, item := range primeraParte {
+		archivoAgregar("html/usuarios/crearUsuario/crearUsuarioTemp.html", item);
+	}
+	fmt.Println("2");
+	grupos, err3 := fileToSlice("grupos.txt");
+	if err3 != nil {
+		log.Fatal(err);
+	}
+	for _, grupo := range grupos {
+		item := fmt.Sprintf("<option value=\"%s\">%s</option>", grupo, grupo);
+		archivoAgregar("html/usuarios/crearUsuario/crearUsuarioTemp.html", item);
+	}
+	fmt.Println("3");
+	segundaParte, err4 := fileToSlice("html/usuarios/crearUsuario/crearUsuarioSegundaMitad.html");
+	if err4 != nil {
+		log.Fatal(err);
+	}
+	for _, item := range segundaParte {
+		archivoAgregar("html/usuarios/crearUsuario/crearUsuarioTemp.html", item);
+	}
+	fmt.Println("4");
+	os.Rename("html/usuarios/crearUsuario/crearUsuarioTemp.html", "html/usuarios/crearUsuario/crearUsuario.html");
 	html, _ := cargarHtml("html/usuarios/crearUsuario/crearUsuario.html");
 	fmt.Fprintf(w, string(html));
 }
@@ -94,7 +127,7 @@ func procesarBorrarUsuario(w http.ResponseWriter, r *http.Request) {
 		http.Redirect(w, r, "/usuarioNoExiste", 303);
 	} else {
 		// procedenos a borrarlo de users.txt
-		archivo, err := os.Create(fmt.Sprintf("usuariosTemp.txt"));
+		archivo, err := os.Create("usuariosTemp.txt");
 		if err != nil {
 			log.Fatal(err);
 		}

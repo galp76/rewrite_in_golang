@@ -1,0 +1,26 @@
+    </select><br><br>
+
+	<button id="submitButton" onclick="processForm()">Crear usuario</button><br><br><br>
+    <button id="submitButton" onclick="menuPrincipal()">Menu principal</button><br>
+
+
+  <script>
+      function processForm() {
+		  const usuario = document.getElementById('usuario').value;
+		  const clave = document.getElementById('clave').value;
+		  const grupo = document.getElementById('grupo').value;
+
+		  const url = `procesarNuevoUsuario/${encodeURIComponent(usuario)}/${encodeURIComponent(clave)}/${encodeURIComponent(grupo)}`;
+
+		  window.location.href = url;
+      }
+
+	  function menuPrincipal() {
+		  const url = 'menuPrincipal';
+
+		  window.location.href = url;
+	  }
+
+  </script>
+</body>
+</html>
