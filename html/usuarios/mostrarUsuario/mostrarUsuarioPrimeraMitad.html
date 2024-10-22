@@ -77,31 +77,3 @@
     <h2>Indique el grupo:</h2>
     <label for="unitOfMeasure">Grupo:</label><br>
     <select id="grupo" >
-<option value="Caracas">Caracas</option>
-<option value="Barquisimeto">Barquisimeto</option>
-<option value="Barcelona">Barcelona</option>
-<option value="Valparaiso">Valparaiso</option>
-<option value="Santiago">Santiago</option>
-    </select><br><br>
-
-	<button id="submitButton" onclick="processForm()">Mostrar usuarios</button><br><br><br>
-    <button id="submitButton" onclick="menuPrincipal()">Menu principal</button><br>
-
-
-  <script>
-      function processForm() {
-		  const usuario = document.getElementById('usuario').value;
-		  const grupo = document.getElementById('grupo').value;
-
-		  const url = `procesarBorrarUsuario/${encodeURIComponent(usuario)}/${encodeURIComponent(grupo)}`;
-
-		  window.location.href = url;
-      }
-
-	  function menuPrincipal() {
-		  window.location.href = 'menuPrincipal()';
-	  }
-
-  </script>
-</body>
-</html>

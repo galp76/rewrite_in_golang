@@ -114,6 +114,39 @@ func usuarioYaExiste(w http.ResponseWriter, r *http.Request) {
 
 // ********** AQUI EMPIEZAN LAS FUNCIONES DE BORRAR USUARIO **************************
 func borrarUsuario(w http.ResponseWriter, r *http.Request) {
+	fmt.Println("Dentro.");
+	archivo, err := os.Create("html/usuarios/borrarUsuario/borrarUsuarioTemp.html");
+	if err != nil {
+		log.Fatal(err);
+	}
+	archivo.Close();
+	fmt.Println("1");
+	primeraParte, err2 := fileToSlice("html/usuarios/borrarUsuario/borrarUsuarioPrimeraMitad.html");
+	if err2 != nil {
+		log.Fatal(err);
+	}
+	for _, item := range primeraParte {
+		archivoAgregar("html/usuarios/borrarUsuario/borrarUsuarioTemp.html", item);
+	}
+	fmt.Println("2");
+	grupos, err3 := fileToSlice("grupos.txt");
+	if err3 != nil {
+		log.Fatal(err);
+	}
+	for _, grupo := range grupos {
+		item := fmt.Sprintf("<option value=\"%s\">%s</option>", grupo, grupo);
+		archivoAgregar("html/usuarios/borrarUsuario/borrarUsuarioTemp.html", item);
+	}
+	fmt.Println("3");
+	segundaParte, err4 := fileToSlice("html/usuarios/borrarUsuario/borrarUsuarioSegundaMitad.html");
+	if err4 != nil {
+		log.Fatal(err);
+	}
+	for _, item := range segundaParte {
+		archivoAgregar("html/usuarios/borrarUsuario/borrarUsuarioTemp.html", item);
+	}
+	fmt.Println("4");
+	os.Rename("html/usuarios/borrarUsuario/borrarUsuarioTemp.html", "html/usuarios/borrarUsuario/borrarUsuario.html");
 	html, _ := cargarHtml("html/usuarios/borrarUsuario/borrarUsuario.html");
 	fmt.Fprintln(w, string(html));
 }
@@ -164,6 +197,39 @@ func usuarioBorrado(w http.ResponseWriter, r *http.Request) {
 
 // ********** AQUI EMPIEZAN LAS FUNCIONES DE MOSTRAR USUARIO **************************
 func mostrarUsuario(w http.ResponseWriter, r *http.Request) {
+	fmt.Println("Dentro.");
+	archivo, err := os.Create("html/usuarios/mostrarUsuario/mostrarUsuarioTemp.html");
+	if err != nil {
+		log.Fatal(err);
+	}
+	archivo.Close();
+	fmt.Println("1");
+	primeraParte, err2 := fileToSlice("html/usuarios/mostrarUsuario/mostrarUsuarioPrimeraMitad.html");
+	if err2 != nil {
+		log.Fatal(err);
+	}
+	for _, item := range primeraParte {
+		archivoAgregar("html/usuarios/mostrarUsuario/mostrarUsuarioTemp.html", item);
+	}
+	fmt.Println("2");
+	grupos, err3 := fileToSlice("grupos.txt");
+	if err3 != nil {
+		log.Fatal(err);
+	}
+	for _, grupo := range grupos {
+		item := fmt.Sprintf("<option value=\"%s\">%s</option>", grupo, grupo);
+		archivoAgregar("html/usuarios/mostrarUsuario/mostrarUsuarioTemp.html", item);
+	}
+	fmt.Println("3");
+	segundaParte, err4 := fileToSlice("html/usuarios/mostrarUsuario/mostrarUsuarioSegundaMitad.html");
+	if err4 != nil {
+		log.Fatal(err);
+	}
+	for _, item := range segundaParte {
+		archivoAgregar("html/usuarios/mostrarUsuario/mostrarUsuarioTemp.html", item);
+	}
+	fmt.Println("4");
+	os.Rename("html/usuarios/mostrarUsuario/mostrarUsuarioTemp.html", "html/usuarios/mostrarUsuario/mostrarUsuario.html");
 	html, _ := cargarHtml("html/usuarios/mostrarUsuario/mostrarUsuario.html");
 	fmt.Fprintf(w, string(html));
 }

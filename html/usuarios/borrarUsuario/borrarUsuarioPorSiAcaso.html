@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Mostrar usuarios</title>
+  <title>Borrar usuario</title>
   <style>
     body {
       font-family: Arial, sans-serif;
@@ -72,19 +72,19 @@
 </head>
 <body>
 
-  <h1>Mostrar usuarios</h1>
+  <h1>Borrar usuario</h1>
 
-    <h2>Indique el grupo:</h2>
+    <h2>Informacion del usuario</h2>
+    <label for="productName">Nombre:</label><br>
+    <input type="text" id="usuario" ><br><br>
+
     <label for="unitOfMeasure">Grupo:</label><br>
     <select id="grupo" >
-<option value="Caracas">Caracas</option>
-<option value="Barquisimeto">Barquisimeto</option>
-<option value="Barcelona">Barcelona</option>
-<option value="Valparaiso">Valparaiso</option>
-<option value="Santiago">Santiago</option>
+      <option value="caracas">Caracas</option>
+      <option value="barquisimeto">Barquisimeto</option>
     </select><br><br>
 
-	<button id="submitButton" onclick="processForm()">Mostrar usuarios</button><br><br><br>
+	<button id="submitButton" onclick="processForm()">Borrar</button><br><br><br>
     <button id="submitButton" onclick="menuPrincipal()">Menu principal</button><br>
 
 

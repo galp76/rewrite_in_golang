@@ -1,0 +1,23 @@
+    </select><br><br>
+
+	<button id="submitButton" onclick="processForm()">Mostrar usuarios</button><br><br><br>
+    <button id="submitButton" onclick="menuPrincipal()">Menu principal</button><br>
+
+
+  <script>
+      function processForm() {
+		  const usuario = document.getElementById('usuario').value;
+		  const grupo = document.getElementById('grupo').value;
+
+		  const url = `procesarBorrarUsuario/${encodeURIComponent(usuario)}/${encodeURIComponent(grupo)}`;
+
+		  window.location.href = url;
+      }
+
+	  function menuPrincipal() {
+		  window.location.href = 'menuPrincipal()';
+	  }
+
+  </script>
+</body>
+</html>
