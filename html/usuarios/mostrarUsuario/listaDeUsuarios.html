@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Mostrar usuarios</title>
+  <title>Lista de  usuarios</title>
   <style>
     body {
       font-family: Arial, sans-serif;
@@ -58,6 +58,15 @@
       width: 100%;
     }
 
+	table, th, td {
+		border: 1px solid black;
+		border-collapse: collapse;
+	}
+
+	th {
+		background-color: blue;
+	}
+
     #submitButton {
       width: 150px;
       height: 60px;
@@ -72,17 +81,19 @@
 </head>
 <body>
 
-  <h1>Mostrar usuarios</h1>
+  <h1>Lista de usuarios</h1>
 
     <h2>Indique el grupo:</h2>
-    <label for="unitOfMeasure">Grupo:</label><br>
-    <select id="grupo" >
-<option value="Caracas">Caracas</option>
-<option value="Barquisimeto">Barquisimeto</option>
-<option value="Barcelona">Barcelona</option>
-<option value="Valparaiso">Valparaiso</option>
-<option value="Santiago">Santiago</option>
-    </select><br><br>
+    <table style="width:200px">
+		<tr>
+			<th>Usuario</th>
+			<th>Clave</th>
+		</tr>
+		<tr>
+			<td>galp</td>
+			<td>1976</td>
+		</tr>
+    </table><br><br>
 
 	<button id="submitButton" onclick="processForm()">Mostrar usuarios</button><br><br><br>
     <button id="submitButton" onclick="menuPrincipal()">Menu principal</button><br>
@@ -90,7 +101,12 @@
 
   <script>
       function processForm() {
-		  window.location.href = 'procesarMostrarUsuario';
+		  const usuario = document.getElementById('usuario').value;
+		  const grupo = document.getElementById('grupo').value;
+
+		  const url = `procesarBorrarUsuario/${encodeURIComponent(usuario)}/${encodeURIComponent(grupo)}`;
+
+		  window.location.href = url;
       }
 
 	  function menuPrincipal() {
