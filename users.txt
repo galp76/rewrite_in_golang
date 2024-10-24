@@ -1,3 +1,5 @@
 admin;1234;admin
 gllr;2011;Barquisimeto
 galp;1976;Caracas
+yu;op;14587;Caracas
+german;14;258;Barquisimeto

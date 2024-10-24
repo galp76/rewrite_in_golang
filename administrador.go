@@ -32,13 +32,11 @@ func index(w http.ResponseWriter, r *http.Request) {
 
 // ************** AQUI COMIENZAN LAS FUNCIONES PARA CREAR UN USUARIO ******************
 func crearUsuario(w http.ResponseWriter, r *http.Request) {
-	fmt.Println("Dentro.");
 	archivo, err := os.Create("html/usuarios/crearUsuario/crearUsuarioTemp.html");
 	if err != nil {
 		log.Fatal(err);
 	}
 	archivo.Close();
-	fmt.Println("1");
 	primeraParte, err2 := fileToSlice("html/usuarios/crearUsuario/crearUsuarioPrimeraMitad.html");
 	if err2 != nil {
 		log.Fatal(err);
@@ -46,7 +44,6 @@ func crearUsuario(w http.ResponseWriter, r *http.Request) {
 	for _, item := range primeraParte {
 		archivoAgregar("html/usuarios/crearUsuario/crearUsuarioTemp.html", item);
 	}
-	fmt.Println("2");
 	grupos, err3 := fileToSlice("grupos.txt");
 	if err3 != nil {
 		log.Fatal(err);
@@ -55,7 +52,6 @@ func crearUsuario(w http.ResponseWriter, r *http.Request) {
 		item := fmt.Sprintf("<option value=\"%s\">%s</option>", grupo, grupo);
 		archivoAgregar("html/usuarios/crearUsuario/crearUsuarioTemp.html", item);
 	}
-	fmt.Println("3");
 	segundaParte, err4 := fileToSlice("html/usuarios/crearUsuario/crearUsuarioSegundaMitad.html");
 	if err4 != nil {
 		log.Fatal(err);
@@ -63,7 +59,6 @@ func crearUsuario(w http.ResponseWriter, r *http.Request) {
 	for _, item := range segundaParte {
 		archivoAgregar("html/usuarios/crearUsuario/crearUsuarioTemp.html", item);
 	}
-	fmt.Println("4");
 	os.Rename("html/usuarios/crearUsuario/crearUsuarioTemp.html", "html/usuarios/crearUsuario/crearUsuario.html");
 	html, _ := cargarHtml("html/usuarios/crearUsuario/crearUsuario.html");
 	fmt.Fprintf(w, string(html));
@@ -85,21 +80,30 @@ func validarNuevoUsuario(usuario string, grupo string) bool {
 func procesarNuevoUsuario(w http.ResponseWriter, r *http.Request) {
 	linea := r.URL.Path[len("/procesarNuevoUsuario/"):];
 	datos := strings.Split(linea, "/");
-	if validarNuevoUsuario(datos[0], datos[2]) {
-		nuevoUsuario := fmt.Sprintf("%s;%s;%s", datos[0], datos[1], datos[2]);
-		archivoAgregar("users.txt", nuevoUsuario);	// agrega el usuario a users.txt
-		err := os.MkdirAll(fmt.Sprintf("usuarios/%s/sesiones", datos[0]), 0750);	// crea el directorio 'sesiones' para el usuario
-		if err != nil {
-			log.Fatal(err);
-		}
-		err = os.MkdirAll(fmt.Sprintf("usuarios/%s/tareas", datos[0]), 0750);	// crea el directorio 'tareas' para el usuario
-		if err != nil {
-			log.Fatal(err);
-		}
-		http.Redirect(w, r, "/usuarioCreado", 303);
+	if strings.Contains(datos[0], ";") || strings.Contains(datos[1], ";") {
+		http.Redirect(w, r, "/caracterNoPermitido", 303);
 	} else {
-		http.Redirect(w, r, "/usuarioYaExiste", 303);
+		if validarNuevoUsuario(datos[0], datos[2]) {
+			nuevoUsuario := fmt.Sprintf("%s;%s;%s", datos[0], datos[1], datos[2]);
+			archivoAgregar("users.txt", nuevoUsuario);	// agrega el usuario a users.txt
+			err := os.MkdirAll(fmt.Sprintf("usuarios/%s/sesiones", datos[0]), 0750);	// crea el directorio 'sesiones' para el usuario
+			if err != nil {
+				log.Fatal(err);
+			}
+			err = os.MkdirAll(fmt.Sprintf("usuarios/%s/tareas", datos[0]), 0750);	// crea el directorio 'tareas' para el usuario
+			if err != nil {
+				log.Fatal(err);
+			}
+			http.Redirect(w, r, "/usuarioCreado", 303);
+		} else {
+			http.Redirect(w, r, "/usuarioYaExiste", 303);
+		}
 	}
+}
+
+func caracterNoPermitido(w http.ResponseWriter, r *http.Request) {
+	html, _ := cargarHtml("html/usuarios/crearUsuario/caracterNoPermitido.html");
+	fmt.Fprintln(w, string(html));
 }
 
 func usuarioCreado(w http.ResponseWriter, r *http.Request) {
@@ -114,13 +118,11 @@ func usuarioYaExiste(w http.ResponseWriter, r *http.Request) {
 
 // ********** AQUI EMPIEZAN LAS FUNCIONES DE BORRAR USUARIO **************************
 func borrarUsuario(w http.ResponseWriter, r *http.Request) {
-	fmt.Println("Dentro.");
 	archivo, err := os.Create("html/usuarios/borrarUsuario/borrarUsuarioTemp.html");
 	if err != nil {
 		log.Fatal(err);
 	}
 	archivo.Close();
-	fmt.Println("1");
 	primeraParte, err2 := fileToSlice("html/usuarios/borrarUsuario/borrarUsuarioPrimeraMitad.html");
 	if err2 != nil {
 		log.Fatal(err);
@@ -128,7 +130,6 @@ func borrarUsuario(w http.ResponseWriter, r *http.Request) {
 	for _, item := range primeraParte {
 		archivoAgregar("html/usuarios/borrarUsuario/borrarUsuarioTemp.html", item);
 	}
-	fmt.Println("2");
 	grupos, err3 := fileToSlice("grupos.txt");
 	if err3 != nil {
 		log.Fatal(err);
@@ -137,7 +138,6 @@ func borrarUsuario(w http.ResponseWriter, r *http.Request) {
 		item := fmt.Sprintf("<option value=\"%s\">%s</option>", grupo, grupo);
 		archivoAgregar("html/usuarios/borrarUsuario/borrarUsuarioTemp.html", item);
 	}
-	fmt.Println("3");
 	segundaParte, err4 := fileToSlice("html/usuarios/borrarUsuario/borrarUsuarioSegundaMitad.html");
 	if err4 != nil {
 		log.Fatal(err);
@@ -145,7 +145,6 @@ func borrarUsuario(w http.ResponseWriter, r *http.Request) {
 	for _, item := range segundaParte {
 		archivoAgregar("html/usuarios/borrarUsuario/borrarUsuarioTemp.html", item);
 	}
-	fmt.Println("4");
 	os.Rename("html/usuarios/borrarUsuario/borrarUsuarioTemp.html", "html/usuarios/borrarUsuario/borrarUsuario.html");
 	html, _ := cargarHtml("html/usuarios/borrarUsuario/borrarUsuario.html");
 	fmt.Fprintln(w, string(html));
@@ -197,13 +196,11 @@ func usuarioBorrado(w http.ResponseWriter, r *http.Request) {
 
 // ********** AQUI EMPIEZAN LAS FUNCIONES DE MOSTRAR USUARIO **************************
 func mostrarUsuario(w http.ResponseWriter, r *http.Request) {
-	fmt.Println("Dentro.");
 	archivo, err := os.Create("html/usuarios/mostrarUsuario/mostrarUsuarioTemp.html");
 	if err != nil {
 		log.Fatal(err);
 	}
 	archivo.Close();
-	fmt.Println("1");
 	primeraParte, err2 := fileToSlice("html/usuarios/mostrarUsuario/mostrarUsuarioPrimeraMitad.html");
 	if err2 != nil {
 		log.Fatal(err);
@@ -211,7 +208,6 @@ func mostrarUsuario(w http.ResponseWriter, r *http.Request) {
 	for _, item := range primeraParte {
 		archivoAgregar("html/usuarios/mostrarUsuario/mostrarUsuarioTemp.html", item);
 	}
-	fmt.Println("2");
 	grupos, err3 := fileToSlice("grupos.txt");
 	if err3 != nil {
 		log.Fatal(err);
@@ -220,7 +216,6 @@ func mostrarUsuario(w http.ResponseWriter, r *http.Request) {
 		item := fmt.Sprintf("<option value=\"%s\">%s</option>", grupo, grupo);
 		archivoAgregar("html/usuarios/mostrarUsuario/mostrarUsuarioTemp.html", item);
 	}
-	fmt.Println("3");
 	segundaParte, err4 := fileToSlice("html/usuarios/mostrarUsuario/mostrarUsuarioSegundaMitad.html");
 	if err4 != nil {
 		log.Fatal(err);
@@ -228,7 +223,6 @@ func mostrarUsuario(w http.ResponseWriter, r *http.Request) {
 	for _, item := range segundaParte {
 		archivoAgregar("html/usuarios/mostrarUsuario/mostrarUsuarioTemp.html", item);
 	}
-	fmt.Println("4");
 	os.Rename("html/usuarios/mostrarUsuario/mostrarUsuarioTemp.html", "html/usuarios/mostrarUsuario/mostrarUsuario.html");
 	html, _ := cargarHtml("html/usuarios/mostrarUsuario/mostrarUsuario.html");
 	fmt.Fprintf(w, string(html));
@@ -242,7 +236,6 @@ func procesarMostrarUsuario(w http.ResponseWriter, r *http.Request) {
 		log.Fatal(err);
 	}
 	archivo.Close();
-	fmt.Println("1");
 	primeraParte, err2 := fileToSlice("html/usuarios/mostrarUsuario/listaDeUsuariosPrimeraMitad.html");
 	if err2 != nil {
 		log.Fatal(err);
@@ -250,9 +243,8 @@ func procesarMostrarUsuario(w http.ResponseWriter, r *http.Request) {
 	for _, item := range primeraParte {
 		archivoAgregar("html/usuarios/mostrarUsuario/listaDeUsuariosTemp.html", item);
 	}
-	item := fmt.Sprintf("<h2>Grupo: %s</h2>\n<table style=\"width:200px\">\n<tr>\n<th>Usuario</th>\n<th>Clave</th>\n</tr>", grupo);
+	item := fmt.Sprintf("<h2>Grupo: %s</h2>\n<table style=\"width:300px\">\n<tr>\n<th>Usuario</th>\n<th>Clave</th>\n</tr>", grupo);
 	archivoAgregar("html/usuarios/mostrarUsuario/listaDeUsuariosTemp.html", item);
-	fmt.Println("2");
 	usuarios, err3 := fileToSlice("users.txt");
 	if err3 != nil {
 		log.Fatal(err);
@@ -264,7 +256,6 @@ func procesarMostrarUsuario(w http.ResponseWriter, r *http.Request) {
 			archivoAgregar("html/usuarios/mostrarUsuario/listaDeUsuariosTemp.html", item);
 		}
 	}
-	fmt.Println("3");
 	segundaParte, err4 := fileToSlice("html/usuarios/mostrarUsuario/listaDeUsuariosSegundaMitad.html");
 	if err4 != nil {
 		log.Fatal(err);
@@ -272,7 +263,6 @@ func procesarMostrarUsuario(w http.ResponseWriter, r *http.Request) {
 	for _, item := range segundaParte {
 		archivoAgregar("html/usuarios/mostrarUsuario/listaDeUsuariosTemp.html", item);
 	}
-	fmt.Println("4");
 	os.Rename("html/usuarios/mostrarUsuario/listaDeUsuariosTemp.html", "html/usuarios/mostrarUsuario/listaDeUsuarios.html");
 	http.Redirect(w, r, "/listaDeUsuarios", 303);
 }
@@ -289,6 +279,7 @@ func mainAdministrador() {
 	
 	http.HandleFunc("/crearUsuario", crearUsuario);		// de las mias
 	http.HandleFunc("/procesarNuevoUsuario/", procesarNuevoUsuario);		// de las mias
+	http.HandleFunc("/caracterNoPermitido", caracterNoPermitido);		// de las mias
 	http.HandleFunc("/usuarioCreado", usuarioCreado);		// de las mias
 	http.HandleFunc("/usuarioYaExiste", usuarioYaExiste);		// de las mias
 
