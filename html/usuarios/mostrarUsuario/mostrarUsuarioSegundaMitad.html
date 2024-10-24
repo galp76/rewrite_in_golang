@@ -6,11 +6,14 @@
 
   <script>
       function processForm() {
-		  window.location.href = 'procesarMostrarUsuario';
+		  const grupo = document.getElementById('grupo').value;
+		  const url = `procesarMostrarUsuario/${encodeURIComponent(grupo)}`;
+
+		  window.location.href = url;
       }
 
 	  function menuPrincipal() {
-		  window.location.href = 'menuPrincipal()';
+		  window.location.href = 'menuPrincipal';
 	  }
 
   </script>

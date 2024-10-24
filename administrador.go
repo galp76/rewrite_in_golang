@@ -235,6 +235,49 @@ func mostrarUsuario(w http.ResponseWriter, r *http.Request) {
 }
 
 func procesarMostrarUsuario(w http.ResponseWriter, r *http.Request) {
+	grupo := r.URL.Path[len("/procesarMostrarUsuario/"):];
+
+	archivo, err := os.Create("html/usuarios/mostrarUsuario/listaDeUsuariosTemp.html");
+	if err != nil {
+		log.Fatal(err);
+	}
+	archivo.Close();
+	fmt.Println("1");
+	primeraParte, err2 := fileToSlice("html/usuarios/mostrarUsuario/listaDeUsuariosPrimeraMitad.html");
+	if err2 != nil {
+		log.Fatal(err);
+	}
+	for _, item := range primeraParte {
+		archivoAgregar("html/usuarios/mostrarUsuario/listaDeUsuariosTemp.html", item);
+	}
+	item := fmt.Sprintf("<h2>Grupo: %s</h2>\n<table style=\"width:200px\">\n<tr>\n<th>Usuario</th>\n<th>Clave</th>\n</tr>", grupo);
+	archivoAgregar("html/usuarios/mostrarUsuario/listaDeUsuariosTemp.html", item);
+	fmt.Println("2");
+	usuarios, err3 := fileToSlice("users.txt");
+	if err3 != nil {
+		log.Fatal(err);
+	}
+	for _, linea := range usuarios {
+		partes := strings.Split(linea, ";");
+		if partes[2] == grupo {
+			item := fmt.Sprintf("<tr>\n<td>%s</td>\n<td>%s</td>\n</tr>\n", partes[0], partes[1]);
+			archivoAgregar("html/usuarios/mostrarUsuario/listaDeUsuariosTemp.html", item);
+		}
+	}
+	fmt.Println("3");
+	segundaParte, err4 := fileToSlice("html/usuarios/mostrarUsuario/listaDeUsuariosSegundaMitad.html");
+	if err4 != nil {
+		log.Fatal(err);
+	}
+	for _, item := range segundaParte {
+		archivoAgregar("html/usuarios/mostrarUsuario/listaDeUsuariosTemp.html", item);
+	}
+	fmt.Println("4");
+	os.Rename("html/usuarios/mostrarUsuario/listaDeUsuariosTemp.html", "html/usuarios/mostrarUsuario/listaDeUsuarios.html");
+	http.Redirect(w, r, "/listaDeUsuarios", 303);
+}
+
+func listaDeUsuarios(w http.ResponseWriter, r *http.Request) {
 	html, _ := cargarHtml("html/usuarios/mostrarUsuario/listaDeUsuarios.html");
 	fmt.Fprintf(w, string(html));
 }
@@ -255,7 +298,8 @@ func mainAdministrador() {
 	http.HandleFunc("/usuarioBorrado", usuarioBorrado);	// de las mias
 
 	http.HandleFunc("/mostrarUsuario", mostrarUsuario);	// de las mias
-	http.HandleFunc("/procesarMostrarUsuario", procesarMostrarUsuario);	// de las mias
+	http.HandleFunc("/procesarMostrarUsuario/", procesarMostrarUsuario);	// de las mias
+	http.HandleFunc("/listaDeUsuarios", listaDeUsuarios);	// de las mias
 
 	fmt.Println("Iniciando servidor...");
 	log.Fatal(http.ListenAndServe(":8080", nil));
