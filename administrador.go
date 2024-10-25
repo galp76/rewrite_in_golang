@@ -30,7 +30,10 @@ func index(w http.ResponseWriter, r *http.Request) {
 	fmt.Fprintf(w, string(html));
 }
 
+
 // ************** AQUI COMIENZAN LAS FUNCIONES PARA CREAR UN USUARIO ******************
+
+
 func crearUsuario(w http.ResponseWriter, r *http.Request) {
 	archivo, err := os.Create("html/usuarios/crearUsuario/crearUsuarioTemp.html");
 	if err != nil {
@@ -80,7 +83,7 @@ func validarNuevoUsuario(usuario string, grupo string) bool {
 func procesarNuevoUsuario(w http.ResponseWriter, r *http.Request) {
 	linea := r.URL.Path[len("/procesarNuevoUsuario/"):];
 	datos := strings.Split(linea, "/");
-	if strings.Contains(datos[0], ";") || strings.Contains(datos[1], ";") {
+	if strings.Contains(datos[0], ";") || strings.Contains(datos[1], ";") || len(datos) != 3 {
 		http.Redirect(w, r, "/caracterNoPermitido", 303);
 	} else {
 		if validarNuevoUsuario(datos[0], datos[2]) {
@@ -116,7 +119,10 @@ func usuarioYaExiste(w http.ResponseWriter, r *http.Request) {
 	fmt.Fprintln(w, string(html));
 }
 
+
 // ********** AQUI EMPIEZAN LAS FUNCIONES DE BORRAR USUARIO **************************
+
+
 func borrarUsuario(w http.ResponseWriter, r *http.Request) {
 	archivo, err := os.Create("html/usuarios/borrarUsuario/borrarUsuarioTemp.html");
 	if err != nil {
@@ -194,7 +200,10 @@ func usuarioBorrado(w http.ResponseWriter, r *http.Request) {
 	fmt.Fprintf(w, string(html));
 }
 
+
 // ********** AQUI EMPIEZAN LAS FUNCIONES DE MOSTRAR USUARIO **************************
+
+
 func mostrarUsuario(w http.ResponseWriter, r *http.Request) {
 	archivo, err := os.Create("html/usuarios/mostrarUsuario/mostrarUsuarioTemp.html");
 	if err != nil {
@@ -272,25 +281,69 @@ func listaDeUsuarios(w http.ResponseWriter, r *http.Request) {
 	fmt.Fprintf(w, string(html));
 }
 
+
+// ****************** AQUI COMIENZAN LAS FUNCIONES DE MOSTRAR GRUPOS ******************************
+
+
+func mostrarGrupos(w http.ResponseWriter, r *http.Request) {
+	archivo, err := os.Create("html/grupos/mostrarGrupos/listaDeGruposTemp.html");
+	if err != nil {
+		log.Fatal(err);
+	}
+	archivo.Close();
+	primeraParte, err2 := fileToSlice("html/grupos/mostrarGrupos/listaDeGruposPrimeraMitad.html");
+	if err2 != nil {
+		log.Fatal(err);
+	}
+	for _, item := range primeraParte {
+		archivoAgregar("html/grupos/mostrarGrupos/listaDeGruposTemp.html", item);
+	}
+	item := "<table style=\"width:300px\">\n<tr>\n<th>Grupo</th>\n</tr>";
+	archivoAgregar("html/grupos/mostrarGrupos/listaDeGruposTemp.html", item);
+	grupos, err3 := fileToSlice("grupos.txt");
+	if err3 != nil {
+		log.Fatal(err);
+	}
+	for _, grupo := range grupos {
+		item := fmt.Sprintf("<tr>\n<td>%s</td>\n</tr>\n", grupo);
+		archivoAgregar("html/grupos/mostrarGrupos/listaDeGruposTemp.html", item);
+	}
+	segundaParte, err4 := fileToSlice("html/grupos/mostrarGrupos/listaDeGruposSegundaMitad.html");
+	if err4 != nil {
+		log.Fatal(err);
+	}
+	for _, item := range segundaParte {
+		archivoAgregar("html/grupos/mostrarGrupos/listaDeGruposTemp.html", item);
+	}
+	os.Rename("html/grupos/mostrarGrupos/listaDeGruposTemp.html", "html/grupos/mostrarGrupos/listaDeGrupos.html");
+
+	html, _ := cargarHtml("html/grupos/mostrarGrupos/listaDeGrupos.html");
+	fmt.Fprintf(w, string(html));
+}
+
 func mainAdministrador() {
 //	http.HandleFunc("/view/", viewHandler);
-	http.HandleFunc("/", index);		// de las mias
-	http.HandleFunc("/menuPrincipal", index);		// de las mias
+	http.HandleFunc("/", index);		
+	http.HandleFunc("/menuPrincipal", index);
 	
-	http.HandleFunc("/crearUsuario", crearUsuario);		// de las mias
-	http.HandleFunc("/procesarNuevoUsuario/", procesarNuevoUsuario);		// de las mias
-	http.HandleFunc("/caracterNoPermitido", caracterNoPermitido);		// de las mias
-	http.HandleFunc("/usuarioCreado", usuarioCreado);		// de las mias
-	http.HandleFunc("/usuarioYaExiste", usuarioYaExiste);		// de las mias
+	// USUARIOS
+	http.HandleFunc("/crearUsuario", crearUsuario);
+	http.HandleFunc("/procesarNuevoUsuario/", procesarNuevoUsuario);
+	http.HandleFunc("/caracterNoPermitido", caracterNoPermitido);
+	http.HandleFunc("/usuarioCreado", usuarioCreado);
+	http.HandleFunc("/usuarioYaExiste", usuarioYaExiste);
 
-	http.HandleFunc("/borrarUsuario", borrarUsuario);		// de las mias
-	http.HandleFunc("/procesarBorrarUsuario/", procesarBorrarUsuario);	// de las mias
-	http.HandleFunc("/usuarioNoExiste", usuarioNoExiste);	// de las mias
-	http.HandleFunc("/usuarioBorrado", usuarioBorrado);	// de las mias
+	http.HandleFunc("/borrarUsuario", borrarUsuario);	
+	http.HandleFunc("/procesarBorrarUsuario/", procesarBorrarUsuario);
+	http.HandleFunc("/usuarioNoExiste", usuarioNoExiste);
+	http.HandleFunc("/usuarioBorrado", usuarioBorrado);
 
-	http.HandleFunc("/mostrarUsuario", mostrarUsuario);	// de las mias
-	http.HandleFunc("/procesarMostrarUsuario/", procesarMostrarUsuario);	// de las mias
-	http.HandleFunc("/listaDeUsuarios", listaDeUsuarios);	// de las mias
+	http.HandleFunc("/mostrarUsuario", mostrarUsuario);
+	http.HandleFunc("/procesarMostrarUsuario/", procesarMostrarUsuario);
+	http.HandleFunc("/listaDeUsuarios", listaDeUsuarios);
+
+	// GRUPOS
+	http.HandleFunc("/mostrarGrupos", mostrarGrupos);
 
 	fmt.Println("Iniciando servidor...");
 	log.Fatal(http.ListenAndServe(":8080", nil));

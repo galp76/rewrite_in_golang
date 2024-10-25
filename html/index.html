@@ -51,7 +51,7 @@
     <div class="separator"></div>
 	<div><h3>Grupos de usuarios</h3></div>
     <div>
-        <button onclick="purchases()">Listar grupos</button>
+        <button onclick="mostrarGrupos()">Listar grupos</button>
         <button onclick="purchases()">Crear</button>
         <button onclick="purchases()">Borrar</button>
         <button onclick="purchases()">Incluir usuario</button>
@@ -83,6 +83,10 @@
 
 	function borrarUsuario() {
 		window.location.href = 'borrarUsuario';
+	}
+
+	function mostrarGrupos() {
+		window.location.href = 'mostrarGrupos';
 	}
 
     function logOut() {
