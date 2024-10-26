@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Caracteres no permitidos</title>
+  <title>Grupo creado</title>
   <style>
     body {
       display: flex;
@@ -42,14 +42,19 @@
 </head>
 <body>
   <div class="container">
-	<div><h2>Los datos suministrados no pueden contener los caracteres ";" ó "/"</h2></div>
+	<div><h2>Grupo creado exitosamente</h2></div>
     <div class="separator"></div>
     <div class="separator"></div>
     <div>
+        <button onclick="crearGrupo()">Crear grupo</button>
         <button onclick="menuPrincipal()">Menu principal</button>
     </div>
   </div>
   <script>
+	function crearGrupo() {
+		window.location.href = 'crearGrupo';
+	}
+
 	function menuPrincipal() {
 		window.location.href = '/';
 	}

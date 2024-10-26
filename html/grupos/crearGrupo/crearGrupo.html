@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Crear usuario</title>
+  <title>Crear grupo</title>
   <style>
     body {
       font-family: Arial, sans-serif;
@@ -72,34 +72,21 @@
 </head>
 <body>
 
-  <h1>Crear nuevo usuario</h1>
+    <h1>Crear nuevo grupo</h1>
 
-    <h2>Informacion del usuario</h2>
+    <h2>Informacion del grupo</h2>
     <label for="productName">Nombre:</label><br>
-    <input type="text" id="usuario" ><br><br>
+    <input type="text" id="grupo" ><br><br>
 
-    <label for="sku">Clave:</label><br>
-    <input type="text" id="clave" ><br><br>
-
-    <label for="unitOfMeasure">Grupo:</label><br>
-    <select id="grupo" >
-<option value="Caracas">Caracas</option>
-<option value="Barquisimeto">Barquisimeto</option>
-<option value="Barcelona">Barcelona</option>
-<option value="Barinas">Barinas</option>
-    </select><br><br>
-
-	<button id="submitButton" onclick="processForm()">Crear usuario</button><br><br><br>
+	<button id="submitButton" onclick="processForm()">Crear grupo</button><br><br><br>
     <button id="submitButton" onclick="menuPrincipal()">Menu principal</button><br>
 
 
   <script>
       function processForm() {
-		  const usuario = document.getElementById('usuario').value;
-		  const clave = document.getElementById('clave').value;
 		  const grupo = document.getElementById('grupo').value;
 
-		  const url = `procesarNuevoUsuario/${encodeURIComponent(usuario)}/${encodeURIComponent(clave)}/${encodeURIComponent(grupo)}`;
+		  const url = `procesarNuevoGrupo/${encodeURIComponent(grupo)}`;
 
 		  window.location.href = url;
       }

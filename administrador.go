@@ -321,6 +321,52 @@ func mostrarGrupos(w http.ResponseWriter, r *http.Request) {
 	fmt.Fprintf(w, string(html));
 }
 
+
+// ****************** AQUI COMIENZAN LAS FUNCIONES DE CREAR GRUPO ********************************
+
+
+func crearGrupo(w http.ResponseWriter, r *http.Request) {
+	html, _ := cargarHtml("html/grupos/crearGrupo/crearGrupo.html");
+	fmt.Fprintf(w, string(html));
+}
+
+// retorna true si el grupo es nuevo
+func validarNuevoGrupo(grupo string) bool {
+	grupos, _ := fileToSlice("grupos.txt");
+	for _, linea := range grupos {
+		partes := strings.Split(linea, ";");
+		if partes[0] == grupo {
+			return false;
+		}
+	}
+
+	return true;
+}
+
+func procesarNuevoGrupo(w http.ResponseWriter, r *http.Request) {
+	linea := r.URL.Path[len("/procesarNuevoGrupo/"):];
+	if strings.Contains(linea, ";") || strings.Contains(linea, "/") {
+		http.Redirect(w, r, "/caracterNoPermitido", 303);
+	} else {
+		if validarNuevoGrupo(linea) {
+			archivoAgregar("grupos.txt", linea);
+			http.Redirect(w, r, "/grupoCreado", 303);
+		} else {
+			http.Redirect(w, r, "/grupoYaExiste", 303);
+		}
+	}
+}
+
+func grupoCreado(w http.ResponseWriter, r *http.Request) {
+	html, _ := cargarHtml("html/grupos/crearGrupo/grupoCreado.html");
+	fmt.Fprintln(w, string(html));
+}
+
+func grupoYaExiste(w http.ResponseWriter, r *http.Request) {
+	html, _ := cargarHtml("html/grupos/crearGrupo/grupoYaExiste.html");
+	fmt.Fprintln(w, string(html));
+}
+
 func mainAdministrador() {
 //	http.HandleFunc("/view/", viewHandler);
 	http.HandleFunc("/", index);		
@@ -344,6 +390,10 @@ func mainAdministrador() {
 
 	// GRUPOS
 	http.HandleFunc("/mostrarGrupos", mostrarGrupos);
+	http.HandleFunc("/crearGrupo", crearGrupo);
+	http.HandleFunc("/procesarNuevoGrupo/", procesarNuevoGrupo);
+	http.HandleFunc("/grupoCreado", grupoCreado);
+	http.HandleFunc("/grupoYaExiste", grupoYaExiste);
 
 	fmt.Println("Iniciando servidor...");
 	log.Fatal(http.ListenAndServe(":8080", nil));
