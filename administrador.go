@@ -398,6 +398,92 @@ func grupoYaExiste(w http.ResponseWriter, r *http.Request) {
 	fmt.Fprintln(w, string(html));
 }
 
+
+// ****************** AQUI COMIENZAN LAS FUNCIONES DE BORRAR GRUPO ***********************
+
+func borrarGrupo(w http.ResponseWriter, r *http.Request) {
+	var mu sync.Mutex;
+	mu.Lock();
+	defer mu.Unlock()
+	archivo, err := os.Create("html/grupos/borrarGrupo/borrarGrupoTemp.html");
+	if err != nil {
+		log.Fatal(err);
+	}
+	archivo.Close();
+	primeraParte, err2 := fileToSlice("html/grupos/borrarGrupo/borrarGrupoPrimeraMitad.html");
+	if err2 != nil {
+		log.Fatal(err);
+	}
+	for _, item := range primeraParte {
+		archivoAgregar("html/grupos/borrarGrupo/borrarGrupoTemp.html", item);
+	}
+	grupos, err3 := fileToSlice("grupos.txt");
+	if err3 != nil {
+		log.Fatal(err);
+	}
+	for _, grupo := range grupos {
+		item := fmt.Sprintf("<option value=\"%s\">%s</option>", grupo, grupo);
+		archivoAgregar("html/grupos/borrarGrupo/borrarGrupoTemp.html", item);
+	}
+	segundaParte, err4 := fileToSlice("html/grupos/borrarGrupo/borrarGrupoSegundaMitad.html");
+	if err4 != nil {
+		log.Fatal(err);
+	}
+	for _, item := range segundaParte {
+		archivoAgregar("html/grupos/borrarGrupo/borrarGrupoTemp.html", item);
+	}
+	os.Rename("html/grupos/borrarGrupo/borrarGrupoTemp.html", "html/grupos/borrarGrupo/borrarGrupo.html");
+	html, _ := cargarHtml("html/grupos/borrarGrupo/borrarGrupo.html");
+	fmt.Fprintln(w, string(html));
+}
+/*
+func procesarBorrarUsuario(w http.ResponseWriter, r *http.Request) {
+	var mu sync.Mutex;
+	linea := r.URL.Path[len("/procesarBorrarUsuario/"):];
+	datos := strings.Split(linea, "/");
+
+	// validamos que el usuario a borrar existe
+	if validarNuevoUsuario(datos[0], datos[1]) {
+		http.Redirect(w, r, "/usuarioNoExiste", 303);
+	} else {
+		// procedenos a borrarlo de users.txt
+		mu.Lock();
+		defer mu.Unlock();
+		archivo, err := os.Create("usuariosTemp.txt");
+		if err != nil {
+			log.Fatal(err);
+		}
+		archivo.Close();
+		usuarios, err := fileToSlice("users.txt");
+		if err != nil {
+			log.Fatal(err);
+		}
+		for _, usuario := range usuarios {
+			partes := strings.Split(usuario, ";");
+			if partes[0] == datos[0] && partes[2] == datos[1] {
+				continue;
+			} else {
+				archivoAgregar("usuariosTemp.txt", usuario);
+			}
+		}
+		os.Rename("usuariosTemp.txt", "users.txt");
+
+		// procedemos a eliminar el directorio del usuario
+		os.RemoveAll(fmt.Sprintf("usuarios/%s", datos[0]));
+		http.Redirect(w, r, "/usuarioBorrado", 303);
+	}
+}
+
+func usuarioNoExiste(w http.ResponseWriter, r *http.Request) {
+	html, _ := cargarHtml("html/usuarios/borrarUsuario/usuarioNoExiste.html");
+	fmt.Fprintf(w, string(html));
+}
+
+func usuarioBorrado(w http.ResponseWriter, r *http.Request) {
+	html, _ := cargarHtml("html/usuarios/borrarUsuario/usuarioBorrado.html");
+	fmt.Fprintf(w, string(html));
+}
+*/
 func mainAdministrador() {
 //	http.HandleFunc("/view/", viewHandler);
 	http.HandleFunc("/", index);		
@@ -421,10 +507,13 @@ func mainAdministrador() {
 
 	// GRUPOS
 	http.HandleFunc("/mostrarGrupos", mostrarGrupos);
+
 	http.HandleFunc("/crearGrupo", crearGrupo);
 	http.HandleFunc("/procesarNuevoGrupo/", procesarNuevoGrupo);
 	http.HandleFunc("/grupoCreado", grupoCreado);
 	http.HandleFunc("/grupoYaExiste", grupoYaExiste);
+
+	http.HandleFunc("/borrarGrupo", borrarGrupo);
 
 	fmt.Println("Iniciando servidor...");
 	log.Fatal(http.ListenAndServe(":8080", nil));
