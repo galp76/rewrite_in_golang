@@ -94,10 +94,9 @@
 
   <script>
       function processForm() {
-		  const usuario = document.getElementById('usuario').value;
 		  const grupo = document.getElementById('grupo').value;
 
-		  const url = `procesarBorrarUsuario/${encodeURIComponent(usuario)}/${encodeURIComponent(grupo)}`;
+		  const url = `procesarBorrarGrupo/${encodeURIComponent(grupo)}`;
 
 		  window.location.href = url;
       }

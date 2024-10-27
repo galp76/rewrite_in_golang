@@ -334,8 +334,7 @@ func crearGrupo(w http.ResponseWriter, r *http.Request) {
 func validarNuevoGrupo(grupo string) bool {
 	grupos, _ := fileToSlice("grupos.txt");
 	for _, linea := range grupos {
-		partes := strings.Split(linea, ";");
-		if partes[0] == grupo {
+		if linea == grupo {
 			return false;
 		}
 	}
@@ -370,6 +369,7 @@ func grupoYaExiste(w http.ResponseWriter, r *http.Request) {
 
 // ****************** AQUI COMIENZAN LAS FUNCIONES DE BORRAR GRUPO ***********************
 
+
 func borrarGrupo(w http.ResponseWriter, r *http.Request) {
 	archivo, err := os.Create("html/grupos/borrarGrupo/borrarGrupoTemp.html");
 	if err != nil {
@@ -402,51 +402,59 @@ func borrarGrupo(w http.ResponseWriter, r *http.Request) {
 	html, _ := cargarHtml("html/grupos/borrarGrupo/borrarGrupo.html");
 	fmt.Fprintln(w, string(html));
 }
-/*
-func procesarBorrarUsuario(w http.ResponseWriter, r *http.Request) {
-	linea := r.URL.Path[len("/procesarBorrarUsuario/"):];
-	datos := strings.Split(linea, "/");
 
-	// validamos que el usuario a borrar existe
-	if validarNuevoUsuario(datos[0], datos[1]) {
-		http.Redirect(w, r, "/usuarioNoExiste", 303);
-	} else {
-		// procedenos a borrarlo de users.txt
-		archivo, err := os.Create("usuariosTemp.txt");
-		if err != nil {
-			log.Fatal(err);
-		}
-		archivo.Close();
-		usuarios, err := fileToSlice("users.txt");
-		if err != nil {
-			log.Fatal(err);
-		}
-		for _, usuario := range usuarios {
-			partes := strings.Split(usuario, ";");
-			if partes[0] == datos[0] && partes[2] == datos[1] {
-				continue;
-			} else {
-				archivoAgregar("usuariosTemp.txt", usuario);
-			}
-		}
-		os.Rename("usuariosTemp.txt", "users.txt");
+func procesarBorrarGrupo(w http.ResponseWriter, r *http.Request) {
+	linea := r.URL.Path[len("/procesarBorrarGrupo/"):];
 
-		// procedemos a eliminar el directorio del usuario
-		os.RemoveAll(fmt.Sprintf("usuarios/%s", datos[0]));
-		http.Redirect(w, r, "/usuarioBorrado", 303);
+	// procedenos a borrarlo de grupos.txt
+	archivo, err := os.Create("gruposTemp.txt");
+	if err != nil {
+		log.Fatal(err);
 	}
+	archivo.Close();
+	grupos, err := fileToSlice("grupos.txt");
+	if err != nil {
+		log.Fatal(err);
+	}
+	for _, grupo := range grupos {
+		if linea == grupo {
+			continue;
+		} else {
+			archivoAgregar("gruposTemp.txt", grupo);
+		}
+	}
+	os.Rename("gruposTemp.txt", "grupos.txt");
+
+	// procedemos a eliminar de users.txt todos los usuarios asignados al grupo y sus directorios
+	archivo, err = os.Create("usuariosTemp.txt");
+	if err != nil {
+		log.Fatal(err);
+	}
+	archivo.Close();
+	usuarios, err := fileToSlice("users.txt");
+	if err != nil {
+		log.Fatal(err);
+	}
+	for _, usuario := range usuarios {
+		partes := strings.Split(usuario, ";");
+		if partes[2] == linea {
+			// borramos el directorio del usuario
+			os.RemoveAll(fmt.Sprintf("usuarios/%s", partes[0]));
+			continue;
+		} else {
+			archivoAgregar("usuariosTemp.txt", usuario);
+		}
+	}
+	os.Rename("usuariosTemp.txt", "users.txt");
+
+	http.Redirect(w, r, "/grupoBorrado", 303);
 }
 
-func usuarioNoExiste(w http.ResponseWriter, r *http.Request) {
-	html, _ := cargarHtml("html/usuarios/borrarUsuario/usuarioNoExiste.html");
+func grupoBorrado(w http.ResponseWriter, r *http.Request) {
+	html, _ := cargarHtml("html/grupos/borrarGrupo/grupoBorrado.html");
 	fmt.Fprintf(w, string(html));
 }
 
-func usuarioBorrado(w http.ResponseWriter, r *http.Request) {
-	html, _ := cargarHtml("html/usuarios/borrarUsuario/usuarioBorrado.html");
-	fmt.Fprintf(w, string(html));
-}
-*/
 func mainAdministrador() {
 //	http.HandleFunc("/view/", viewHandler);
 	http.HandleFunc("/", index);		
@@ -477,6 +485,8 @@ func mainAdministrador() {
 	http.HandleFunc("/grupoYaExiste", grupoYaExiste);
 
 	http.HandleFunc("/borrarGrupo", borrarGrupo);
+	http.HandleFunc("/procesarBorrarGrupo/", procesarBorrarGrupo);
+	http.HandleFunc("/grupoBorrado", grupoBorrado);
 
 	fmt.Println("Iniciando servidor...");
 	log.Fatal(http.ListenAndServe(":8080", nil));

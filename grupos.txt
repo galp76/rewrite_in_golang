@@ -2,7 +2,6 @@ Caracas
 Barquisimeto
 Barcelona
 Barinas
-Achaguas
 Zaragoza
 Madrid
 Maturin
