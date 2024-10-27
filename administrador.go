@@ -6,10 +6,14 @@ import (
 	"log"
 	"net/http"
 	"strings"
+	"sync"
 )
 
 // de las mias
 func cargarHtml(archivo string) ([]byte, error) {
+	var mu sync.Mutex;
+	mu.Lock();
+	defer mu.Unlock();
 	html, err := os.ReadFile(archivo);
 	if err != nil {
 		return nil, err;
@@ -35,6 +39,9 @@ func index(w http.ResponseWriter, r *http.Request) {
 
 
 func crearUsuario(w http.ResponseWriter, r *http.Request) {
+	var mu sync.Mutex;
+	mu.Lock();
+	defer mu.Unlock();
 	archivo, err := os.Create("html/usuarios/crearUsuario/crearUsuarioTemp.html");
 	if err != nil {
 		log.Fatal(err);
@@ -69,6 +76,9 @@ func crearUsuario(w http.ResponseWriter, r *http.Request) {
 
 // retorna true si el usuario es nuevo, toma en consideracion el usuario y el grupo
 func validarNuevoUsuario(usuario string, grupo string) bool {
+	var mu sync.Mutex;
+	mu.Lock();
+	defer mu.Unlock();
 	usuarios, _ := fileToSlice("users.txt");
 	for _, linea := range usuarios {
 		partes := strings.Split(linea, ";");
@@ -81,6 +91,9 @@ func validarNuevoUsuario(usuario string, grupo string) bool {
 }
 
 func procesarNuevoUsuario(w http.ResponseWriter, r *http.Request) {
+	var mu sync.Mutex;
+	mu.Lock();
+	defer mu.Unlock();
 	linea := r.URL.Path[len("/procesarNuevoUsuario/"):];
 	datos := strings.Split(linea, "/");
 	if strings.Contains(datos[0], ";") || strings.Contains(datos[1], ";") || len(datos) != 3 {
@@ -124,6 +137,9 @@ func usuarioYaExiste(w http.ResponseWriter, r *http.Request) {
 
 
 func borrarUsuario(w http.ResponseWriter, r *http.Request) {
+	var mu sync.Mutex;
+	mu.Lock();
+	defer mu.Unlock()
 	archivo, err := os.Create("html/usuarios/borrarUsuario/borrarUsuarioTemp.html");
 	if err != nil {
 		log.Fatal(err);
@@ -157,6 +173,9 @@ func borrarUsuario(w http.ResponseWriter, r *http.Request) {
 }
 
 func procesarBorrarUsuario(w http.ResponseWriter, r *http.Request) {
+	var mu sync.Mutex;
+	mu.Lock();
+	defer mu.Unlock()
 	linea := r.URL.Path[len("/procesarBorrarUsuario/"):];
 	datos := strings.Split(linea, "/");
 
@@ -205,6 +224,9 @@ func usuarioBorrado(w http.ResponseWriter, r *http.Request) {
 
 
 func mostrarUsuario(w http.ResponseWriter, r *http.Request) {
+	var mu sync.Mutex;
+	mu.Lock();
+	defer mu.Unlock()
 	archivo, err := os.Create("html/usuarios/mostrarUsuario/mostrarUsuarioTemp.html");
 	if err != nil {
 		log.Fatal(err);
@@ -238,6 +260,9 @@ func mostrarUsuario(w http.ResponseWriter, r *http.Request) {
 }
 
 func procesarMostrarUsuario(w http.ResponseWriter, r *http.Request) {
+	var mu sync.Mutex;
+	mu.Lock();
+	defer mu.Unlock()
 	grupo := r.URL.Path[len("/procesarMostrarUsuario/"):];
 
 	archivo, err := os.Create("html/usuarios/mostrarUsuario/listaDeUsuariosTemp.html");
@@ -286,6 +311,9 @@ func listaDeUsuarios(w http.ResponseWriter, r *http.Request) {
 
 
 func mostrarGrupos(w http.ResponseWriter, r *http.Request) {
+	var mu sync.Mutex;
+	mu.Lock();
+	defer mu.Unlock()
 	archivo, err := os.Create("html/grupos/mostrarGrupos/listaDeGruposTemp.html");
 	if err != nil {
 		log.Fatal(err);
@@ -332,6 +360,9 @@ func crearGrupo(w http.ResponseWriter, r *http.Request) {
 
 // retorna true si el grupo es nuevo
 func validarNuevoGrupo(grupo string) bool {
+	var mu sync.Mutex;
+	mu.Lock();
+	defer mu.Unlock()
 	grupos, _ := fileToSlice("grupos.txt");
 	for _, linea := range grupos {
 		partes := strings.Split(linea, ";");
@@ -344,6 +375,9 @@ func validarNuevoGrupo(grupo string) bool {
 }
 
 func procesarNuevoGrupo(w http.ResponseWriter, r *http.Request) {
+	var mu sync.Mutex;
+	mu.Lock();
+	defer mu.Unlock()
 	linea := r.URL.Path[len("/procesarNuevoGrupo/"):];
 	if strings.Contains(linea, ";") || strings.Contains(linea, "/") {
 		http.Redirect(w, r, "/caracterNoPermitido", 303);
