@@ -47,6 +47,7 @@
         <button onclick="mostrarUsuario()">Mostrar</button>
         <button onclick="crearUsuario()">Crear</button>
         <button onclick="borrarUsuario()">Borrar</button>
+        <button onclick="cambiarGrupo()">Cambiar grupo</button>
     </div>
     <div class="separator"></div>
 	<div><h3>Grupos de usuarios</h3></div>
@@ -54,7 +55,6 @@
         <button onclick="mostrarGrupos()">Listar grupos</button>
         <button onclick="crearGrupo()">Crear</button>
         <button onclick="borrarGrupo()">Borrar</button>
-        <button onclick="purchases()">Incluir usuario</button>
         <button onclick="purchases()">Listar usuarios</button>
         <button onclick="purchases()">Asignar tarea</button>
     </div>
@@ -85,6 +85,10 @@
 		window.location.href = 'borrarUsuario';
 	}
 
+	function cambiarGrupo() {
+		window.location.href = 'cambiarGrupo';
+	}
+
 	function mostrarGrupos() {
 		window.location.href = 'mostrarGrupos';
 	}
@@ -98,8 +102,7 @@
 	}
 
     function logOut() {
-	const url = `log_out`;
-	window.location.href = url;
+		window.close();
     }
   </script>
 </body>

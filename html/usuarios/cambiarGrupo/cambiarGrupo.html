@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Mostrar usuarios</title>
+  <title>Cambiar grupo</title>
   <style>
     body {
       font-family: Arial, sans-serif;
@@ -72,11 +72,26 @@
 </head>
 <body>
 
-  <h1>Mostrar usuarios</h1>
+  <h1>Cambiar un usuario de grupo</h1>
 
-    <h2>Indique el grupo:</h2>
-    <label for="unitOfMeasure">Grupo:</label><br>
-    <select id="grupo" >
+    <h2>Informacion del usuario</h2>
+    <label for="productName">Nombre:</label><br>
+    <input type="text" id="usuario" ><br><br>
+
+    <label for="unitOfMeasure">Grupo actual:</label><br>
+    <select id="grupoActual" >
+<option value="Caracas">Caracas</option>
+<option value="Barquisimeto">Barquisimeto</option>
+<option value="Barcelona">Barcelona</option>
+<option value="Barinas">Barinas</option>
+<option value="Zaragoza">Zaragoza</option>
+<option value="Madrid">Madrid</option>
+<option value="Maturin">Maturin</option>
+<option value="Achaguas">Achaguas</option>
+</select><br><br>
+<label for="unitOfMeasure">Nuevo grupo:</label><br>
+<select id="nuevoGrupo">
+
 <option value="Caracas">Caracas</option>
 <option value="Barquisimeto">Barquisimeto</option>
 <option value="Barcelona">Barcelona</option>
@@ -87,20 +102,23 @@
 <option value="Achaguas">Achaguas</option>
     </select><br><br>
 
-	<button id="submitButton" onclick="processForm()">Mostrar usuarios</button><br><br><br>
+	<button id="submitButton" onclick="processForm()">Cambiar grupo</button><br><br><br>
     <button id="submitButton" onclick="menuPrincipal()">Menu principal</button><br>
 
 
   <script>
       function processForm() {
-		  const grupo = document.getElementById('grupo').value;
-		  const url = `procesarMostrarUsuario/${encodeURIComponent(grupo)}`;
+		  const usuario = document.getElementById('usuario').value;
+		  const grupoActual = document.getElementById('grupoActual').value;
+		  const nuevoGrupo = document.getElementById('nuevoGrupo').value;
+
+		  const url = `procesarCambiarGrupo/${encodeURIComponent(usuario)}/${encodeURIComponent(grupoActual)}/${encodeURIComponent(nuevoGrupo)}`;
 
 		  window.location.href = url;
       }
 
 	  function menuPrincipal() {
-		  window.location.href = 'menuPrincipal';
+		  window.location.href = '/';
 	  }
 
   </script>

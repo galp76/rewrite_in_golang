@@ -282,6 +282,87 @@ func listaDeUsuarios(w http.ResponseWriter, r *http.Request) {
 }
 
 
+// ****************** AQUI COMIENZAN LAS FUNCIONES PARA CAMBIAR UN USUARIO DE GRUPO ******************************
+
+
+func cambiarGrupo(w http.ResponseWriter, r *http.Request) {
+	archivo, err := os.Create("html/usuarios/cambiarGrupo/cambiarGrupoTemp.html");
+	if err != nil {
+		log.Fatal(err);
+	}
+	archivo.Close();
+	primeraParte, err2 := fileToSlice("html/usuarios/cambiarGrupo/cambiarGrupoPrimeraMitad.html");
+	if err2 != nil {
+		log.Fatal(err);
+	}
+	for _, item := range primeraParte {
+		archivoAgregar("html/usuarios/cambiarGrupo/cambiarGrupoTemp.html", item);
+	}
+	grupos, err3 := fileToSlice("grupos.txt");
+	if err3 != nil {
+		log.Fatal(err);
+	}
+	for _, grupo := range grupos {
+		item := fmt.Sprintf("<option value=\"%s\">%s</option>", grupo, grupo);
+		archivoAgregar("html/usuarios/cambiarGrupo/cambiarGrupoTemp.html", item);
+	}
+	item := "</select><br><br>\n<label for=\"unitOfMeasure\">Nuevo grupo:</label><br>\n<select id=\"nuevoGrupo\">\n";
+	archivoAgregar("html/usuarios/cambiarGrupo/cambiarGrupoTemp.html", item);
+	for _, grupo := range grupos {
+		item := fmt.Sprintf("<option value=\"%s\">%s</option>", grupo, grupo);
+		archivoAgregar("html/usuarios/cambiarGrupo/cambiarGrupoTemp.html", item);
+	}
+	segundaParte, err4 := fileToSlice("html/usuarios/cambiarGrupo/cambiarGrupoSegundaMitad.html");
+	if err4 != nil {
+		log.Fatal(err);
+	}
+	for _, item := range segundaParte {
+		archivoAgregar("html/usuarios/cambiarGrupo/cambiarGrupoTemp.html", item);
+	}
+	os.Rename("html/usuarios/cambiarGrupo/cambiarGrupoTemp.html", "html/usuarios/cambiarGrupo/cambiarGrupo.html");
+	html, _ := cargarHtml("html/usuarios/cambiarGrupo/cambiarGrupo.html");
+	fmt.Fprintf(w, string(html));
+}
+
+func procesarCambiarGrupo(w http.ResponseWriter, r *http.Request) {
+	linea := r.URL.Path[len("/procesarCambiarGrupo/"):];
+	datos := strings.Split(linea, "/");
+
+	// validamos que el usuario a reubicar existe
+	if validarNuevoUsuario(datos[0], datos[1]) {
+		http.Redirect(w, r, "/usuarioNoExiste", 303);
+	} else {
+		// procedemos a modificar users.txt
+		archivo, err := os.Create("usuariosTemp.txt");
+		if err != nil {
+			log.Fatal(err);
+		}
+		archivo.Close();
+		usuarios, err := fileToSlice("users.txt");
+		if err != nil {
+			log.Fatal(err);
+		}
+		for _, usuario := range usuarios {
+			partes := strings.Split(usuario, ";");
+			if partes[0] == datos[0] && partes[2] == datos[1] {
+				item := fmt.Sprintf("%s;%s;%s", partes[0], partes[1], datos[2]);
+				archivoAgregar("usuariosTemp.txt", item);
+			} else {
+				archivoAgregar("usuariosTemp.txt", usuario);
+			}
+		}
+		os.Rename("usuariosTemp.txt", "users.txt");
+
+		http.Redirect(w, r, "/usuarioReasignado", 303);
+	}
+}
+
+func usuarioReasignado(w http.ResponseWriter, r *http.Request) {
+	html, _ := cargarHtml("html/usuarios/cambiarGrupo/usuarioReasignado.html");
+	fmt.Fprintf(w, string(html));
+}
+
+
 // ****************** AQUI COMIENZAN LAS FUNCIONES DE MOSTRAR GRUPOS ******************************
 
 
@@ -475,6 +556,10 @@ func mainAdministrador() {
 	http.HandleFunc("/mostrarUsuario", mostrarUsuario);
 	http.HandleFunc("/procesarMostrarUsuario/", procesarMostrarUsuario);
 	http.HandleFunc("/listaDeUsuarios", listaDeUsuarios);
+
+	http.HandleFunc("/cambiarGrupo", cambiarGrupo);
+	http.HandleFunc("/procesarCambiarGrupo/", procesarCambiarGrupo);
+	http.HandleFunc("/usuarioReasignado", usuarioReasignado);
 
 	// GRUPOS
 	http.HandleFunc("/mostrarGrupos", mostrarGrupos);
