@@ -8,6 +8,8 @@ import (
 	"strings"
 )
 
+var archivoTareasGlobal string;
+
 // de las mias
 func cargarHtml(archivo string) ([]byte, error) {
 	html, err := os.ReadFile(archivo);
@@ -197,87 +199,6 @@ func usuarioNoExiste(w http.ResponseWriter, r *http.Request) {
 
 func usuarioBorrado(w http.ResponseWriter, r *http.Request) {
 	html, _ := cargarHtml("html/usuarios/borrarUsuario/usuarioBorrado.html");
-	fmt.Fprintf(w, string(html));
-}
-
-
-// ********** AQUI EMPIEZAN LAS FUNCIONES DE MOSTRAR USUARIO **************************
-
-
-func mostrarUsuario(w http.ResponseWriter, r *http.Request) {
-	archivo, err := os.Create("html/usuarios/mostrarUsuario/mostrarUsuarioTemp.html");
-	if err != nil {
-		log.Fatal(err);
-	}
-	archivo.Close();
-	primeraParte, err2 := fileToSlice("html/usuarios/mostrarUsuario/mostrarUsuarioPrimeraMitad.html");
-	if err2 != nil {
-		log.Fatal(err);
-	}
-	for _, item := range primeraParte {
-		archivoAgregar("html/usuarios/mostrarUsuario/mostrarUsuarioTemp.html", item);
-	}
-	grupos, err3 := fileToSlice("grupos.txt");
-	if err3 != nil {
-		log.Fatal(err);
-	}
-	for _, grupo := range grupos {
-		item := fmt.Sprintf("<option value=\"%s\">%s</option>", grupo, grupo);
-		archivoAgregar("html/usuarios/mostrarUsuario/mostrarUsuarioTemp.html", item);
-	}
-	segundaParte, err4 := fileToSlice("html/usuarios/mostrarUsuario/mostrarUsuarioSegundaMitad.html");
-	if err4 != nil {
-		log.Fatal(err);
-	}
-	for _, item := range segundaParte {
-		archivoAgregar("html/usuarios/mostrarUsuario/mostrarUsuarioTemp.html", item);
-	}
-	os.Rename("html/usuarios/mostrarUsuario/mostrarUsuarioTemp.html", "html/usuarios/mostrarUsuario/mostrarUsuario.html");
-	html, _ := cargarHtml("html/usuarios/mostrarUsuario/mostrarUsuario.html");
-	fmt.Fprintf(w, string(html));
-}
-
-func procesarMostrarUsuario(w http.ResponseWriter, r *http.Request) {
-	grupo := r.URL.Path[len("/procesarMostrarUsuario/"):];
-
-	archivo, err := os.Create("html/usuarios/mostrarUsuario/listaDeUsuariosTemp.html");
-	if err != nil {
-		log.Fatal(err);
-	}
-	archivo.Close();
-	primeraParte, err2 := fileToSlice("html/usuarios/mostrarUsuario/listaDeUsuariosPrimeraMitad.html");
-	if err2 != nil {
-		log.Fatal(err);
-	}
-	for _, item := range primeraParte {
-		archivoAgregar("html/usuarios/mostrarUsuario/listaDeUsuariosTemp.html", item);
-	}
-	item := fmt.Sprintf("<h2>Grupo: %s</h2>\n<table style=\"width:300px\">\n<tr>\n<th>Usuario</th>\n<th>Clave</th>\n</tr>", grupo);
-	archivoAgregar("html/usuarios/mostrarUsuario/listaDeUsuariosTemp.html", item);
-	usuarios, err3 := fileToSlice("users.txt");
-	if err3 != nil {
-		log.Fatal(err);
-	}
-	for _, linea := range usuarios {
-		partes := strings.Split(linea, ";");
-		if partes[2] == grupo {
-			item := fmt.Sprintf("<tr>\n<td>%s</td>\n<td>%s</td>\n</tr>\n", partes[0], partes[1]);
-			archivoAgregar("html/usuarios/mostrarUsuario/listaDeUsuariosTemp.html", item);
-		}
-	}
-	segundaParte, err4 := fileToSlice("html/usuarios/mostrarUsuario/listaDeUsuariosSegundaMitad.html");
-	if err4 != nil {
-		log.Fatal(err);
-	}
-	for _, item := range segundaParte {
-		archivoAgregar("html/usuarios/mostrarUsuario/listaDeUsuariosTemp.html", item);
-	}
-	os.Rename("html/usuarios/mostrarUsuario/listaDeUsuariosTemp.html", "html/usuarios/mostrarUsuario/listaDeUsuarios.html");
-	http.Redirect(w, r, "/listaDeUsuarios", 303);
-}
-
-func listaDeUsuarios(w http.ResponseWriter, r *http.Request) {
-	html, _ := cargarHtml("html/usuarios/mostrarUsuario/listaDeUsuarios.html");
 	fmt.Fprintf(w, string(html));
 }
 
@@ -536,6 +457,162 @@ func grupoBorrado(w http.ResponseWriter, r *http.Request) {
 	fmt.Fprintf(w, string(html));
 }
 
+
+// ********** AQUI EMPIEZAN LAS FUNCIONES DE LISTAR USUARIOS **************************
+
+
+func mostrarUsuario(w http.ResponseWriter, r *http.Request) {
+	archivo, err := os.Create("html/usuarios/mostrarUsuario/mostrarUsuarioTemp.html");
+	if err != nil {
+		log.Fatal(err);
+	}
+	archivo.Close();
+	primeraParte, err2 := fileToSlice("html/usuarios/mostrarUsuario/mostrarUsuarioPrimeraMitad.html");
+	if err2 != nil {
+		log.Fatal(err);
+	}
+	for _, item := range primeraParte {
+		archivoAgregar("html/usuarios/mostrarUsuario/mostrarUsuarioTemp.html", item);
+	}
+	grupos, err3 := fileToSlice("grupos.txt");
+	if err3 != nil {
+		log.Fatal(err);
+	}
+	for _, grupo := range grupos {
+		item := fmt.Sprintf("<option value=\"%s\">%s</option>", grupo, grupo);
+		archivoAgregar("html/usuarios/mostrarUsuario/mostrarUsuarioTemp.html", item);
+	}
+	segundaParte, err4 := fileToSlice("html/usuarios/mostrarUsuario/mostrarUsuarioSegundaMitad.html");
+	if err4 != nil {
+		log.Fatal(err);
+	}
+	for _, item := range segundaParte {
+		archivoAgregar("html/usuarios/mostrarUsuario/mostrarUsuarioTemp.html", item);
+	}
+	os.Rename("html/usuarios/mostrarUsuario/mostrarUsuarioTemp.html", "html/usuarios/mostrarUsuario/mostrarUsuario.html");
+	html, _ := cargarHtml("html/usuarios/mostrarUsuario/mostrarUsuario.html");
+	fmt.Fprintf(w, string(html));
+}
+
+func procesarMostrarUsuario(w http.ResponseWriter, r *http.Request) {
+	grupo := r.URL.Path[len("/procesarMostrarUsuario/"):];
+
+	archivo, err := os.Create("html/usuarios/mostrarUsuario/listaDeUsuariosTemp.html");
+	if err != nil {
+		log.Fatal(err);
+	}
+	archivo.Close();
+	primeraParte, err2 := fileToSlice("html/usuarios/mostrarUsuario/listaDeUsuariosPrimeraMitad.html");
+	if err2 != nil {
+		log.Fatal(err);
+	}
+	for _, item := range primeraParte {
+		archivoAgregar("html/usuarios/mostrarUsuario/listaDeUsuariosTemp.html", item);
+	}
+	item := fmt.Sprintf("<h2>Grupo: %s</h2>\n<table style=\"width:300px\">\n<tr>\n<th>Usuario</th>\n<th>Clave</th>\n</tr>", grupo);
+	archivoAgregar("html/usuarios/mostrarUsuario/listaDeUsuariosTemp.html", item);
+	usuarios, err3 := fileToSlice("users.txt");
+	if err3 != nil {
+		log.Fatal(err);
+	}
+	for _, linea := range usuarios {
+		partes := strings.Split(linea, ";");
+		if partes[2] == grupo {
+			item := fmt.Sprintf("<tr>\n<td>%s</td>\n<td>%s</td>\n</tr>\n", partes[0], partes[1]);
+			archivoAgregar("html/usuarios/mostrarUsuario/listaDeUsuariosTemp.html", item);
+		}
+	}
+	segundaParte, err4 := fileToSlice("html/usuarios/mostrarUsuario/listaDeUsuariosSegundaMitad.html");
+	if err4 != nil {
+		log.Fatal(err);
+	}
+	for _, item := range segundaParte {
+		archivoAgregar("html/usuarios/mostrarUsuario/listaDeUsuariosTemp.html", item);
+	}
+	os.Rename("html/usuarios/mostrarUsuario/listaDeUsuariosTemp.html", "html/usuarios/mostrarUsuario/listaDeUsuarios.html");
+	http.Redirect(w, r, "/listaDeUsuarios", 303);
+}
+
+func listaDeUsuarios(w http.ResponseWriter, r *http.Request) {
+	html, _ := cargarHtml("html/usuarios/mostrarUsuario/listaDeUsuarios.html");
+	fmt.Fprintf(w, string(html));
+}
+
+
+// ******************* AQUI COMIENZAN LAS FUNCIONES DE CREAR TAREA ***********************
+
+
+func crearTarea(w http.ResponseWriter, r *http.Request) {
+	html, _ := cargarHtml("html/tareas/crearTarea/crearTarea.html");
+	fmt.Fprintf(w, string(html));
+}
+
+func procesarCrearArchivo(w http.ResponseWriter, r *http.Request) {
+	// creamos el archivo txt con el nommbre suministrado
+	nombre := r.URL.Path[len("/procesarCrearArchivo/"):];
+	nombreArchivo := fmt.Sprintf("tareas/%s.txt", nombre);
+	archivoTareasGlobal = nombreArchivo;
+	archivoTarea, err := os.Create(nombreArchivo);
+	if err != nil {
+		log.Fatal(err);
+	}
+	archivoTarea.Close();
+
+	http.Redirect(w, r, "/crearOperaciones", 303);
+}
+
+func crearOperaciones(w http.ResponseWriter, r *http.Request) {
+	html, _ := cargarHtml("html/tareas/crearTarea/crearOperaciones.html");
+	fmt.Fprintf(w, string(html));
+}
+
+func procesarNuevaOperacion(w http.ResponseWriter, r *http.Request) {
+	linea := r.URL.Path[len("/procesarNuevaOperacion/"):];
+	datosOperacion := strings.Split(linea, "/");
+	switch datosOperacion[0] {
+	case "Suma":
+		operacion := strings.Replace(datosOperacion[1], "%2B", "+", -1);
+		var caracterNoPermitido bool;
+		for _, ch := range operacion {
+			if !strings.Contains("0123456789+", string(ch)) {
+				caracterNoPermitido = true;
+				break;
+			}
+		}
+		if caracterNoPermitido {
+			http.Redirect(w, r, "/tareasCaracterNoPermitido", 303);
+		} else {
+			operacion = fmt.Sprintf("1 %s Pendiente", operacion);
+			archivoAgregar(archivoTareasGlobal, operacion);		
+			http.Redirect(w, r, "/crearOperaciones", 303);
+		}
+	case "Resta":
+		operacion := datosOperacion[1];
+		var caracterNoPermitido bool;
+		for _, ch := range operacion {
+			if !strings.Contains("0123456789-", string(ch)) {
+				caracterNoPermitido = true;
+				break;
+			}
+		}
+		if caracterNoPermitido {
+			http.Redirect(w, r, "/tareasCaracterNoPermitido", 303);
+		} else {
+			operacion = fmt.Sprintf("2 %s Pendiente", operacion);
+			archivoAgregar(archivoTareasGlobal, operacion);		
+			http.Redirect(w, r, "/crearOperaciones", 303);
+		}
+	default:
+		fmt.Println("qwerty");
+	}
+
+}
+
+func tareasCaracterNoPermitido(w http.ResponseWriter, r *http.Request) {
+	html, _ := cargarHtml("html/tareas/crearTarea/caracterNoPermitido.html");
+	fmt.Fprintf(w, string(html));
+}
+
 func mainAdministrador() {
 //	http.HandleFunc("/view/", viewHandler);
 	http.HandleFunc("/", index);		
@@ -553,10 +630,6 @@ func mainAdministrador() {
 	http.HandleFunc("/usuarioNoExiste", usuarioNoExiste);
 	http.HandleFunc("/usuarioBorrado", usuarioBorrado);
 
-	http.HandleFunc("/mostrarUsuario", mostrarUsuario);
-	http.HandleFunc("/procesarMostrarUsuario/", procesarMostrarUsuario);
-	http.HandleFunc("/listaDeUsuarios", listaDeUsuarios);
-
 	http.HandleFunc("/cambiarGrupo", cambiarGrupo);
 	http.HandleFunc("/procesarCambiarGrupo/", procesarCambiarGrupo);
 	http.HandleFunc("/usuarioReasignado", usuarioReasignado);
@@ -572,6 +645,17 @@ func mainAdministrador() {
 	http.HandleFunc("/borrarGrupo", borrarGrupo);
 	http.HandleFunc("/procesarBorrarGrupo/", procesarBorrarGrupo);
 	http.HandleFunc("/grupoBorrado", grupoBorrado);
+
+	http.HandleFunc("/mostrarUsuario", mostrarUsuario);
+	http.HandleFunc("/procesarMostrarUsuario/", procesarMostrarUsuario);
+	http.HandleFunc("/listaDeUsuarios", listaDeUsuarios);
+
+	// TAREAS
+	http.HandleFunc("/crearTarea", crearTarea);
+	http.HandleFunc("/procesarCrearArchivo/", procesarCrearArchivo);
+	http.HandleFunc("/crearOperaciones", crearOperaciones);
+	http.HandleFunc("/procesarNuevaOperacion/", procesarNuevaOperacion);
+	http.HandleFunc("/tareasCaracterNoPermitido", tareasCaracterNoPermitido);
 
 	fmt.Println("Iniciando servidor...");
 	log.Fatal(http.ListenAndServe(":8080", nil));

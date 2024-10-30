@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Listar usuarios</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 20px;
+      background-color: #f4f4f4; /* Light background */
+    }
+
+    h1 {
+      color: #333;
+      text-align: center;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 5px;
+      font-weight: bold;
+    }
+
+    input[type="text"],
+    input[type="number"],
+    textarea {
+      width: 200px;
+      padding: 10px;
+      margin-bottom: 15px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+    }
+
+    input[type="file"] {
+      margin-bottom: 15px;
+    }
+
+    textarea {
+      resize: vertical; /* Allow resizing only vertically */
+      height: 100px;
+    }
+
+    select {
+      width: 200px;
+      padding: 10px;
+      margin-bottom: 15px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+    }
+
+    input[type="submit"] {
+      background-color: #4CAF50;
+      color: white;
+      padding: 12px 20px;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      width: 100%;
+    }
+
+    #submitButton {
+      width: 150px;
+      height: 60px;
+      font-size: 16px;
+      background-color: #4CAF50; /* Ejemplo de color verde */
+      color: white;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>Listar usuarios</h1>
+
+    <h2>Indique el grupo a mostrar:</h2>
+    <label for="unitOfMeasure">Grupo:</label><br>
+    <select id="grupo" >
+<option value="Caracas">Caracas</option>
+<option value="Barquisimeto">Barquisimeto</option>
+<option value="Barcelona">Barcelona</option>
+<option value="Barinas">Barinas</option>
+<option value="Zaragoza">Zaragoza</option>
+<option value="Madrid">Madrid</option>
+<option value="Maturin">Maturin</option>
+<option value="Achaguas">Achaguas</option>
+    </select><br><br>
+
+	<button id="submitButton" onclick="processForm()">Listar usuarios</button><br><br><br>
+    <button id="submitButton" onclick="menuPrincipal()">Menu principal</button><br>
+
+
+  <script>
+      function processForm() {
+		  const grupo = document.getElementById('grupo').value;
+		  const url = `procesarListarUsuarios/${encodeURIComponent(grupo)}`;
+
+		  window.location.href = url;
+      }
+
+	  function menuPrincipal() {
+		  window.location.href = '/';
+	  }
+
+  </script>
+</body>
+</html>

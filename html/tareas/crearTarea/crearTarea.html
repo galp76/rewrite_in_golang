@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Crear tarea</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 20px;
+      background-color: #f4f4f4; /* Light background */
+    }
+
+    h1 {
+      color: #333;
+      text-align: center;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 5px;
+      font-weight: bold;
+    }
+
+    input[type="text"],
+    input[type="number"],
+    textarea {
+      width: 200px;
+      padding: 10px;
+      margin-bottom: 15px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+    }
+
+    input[type="file"] {
+      margin-bottom: 15px;
+    }
+
+    textarea {
+      resize: vertical; /* Allow resizing only vertically */
+      height: 100px;
+    }
+
+    select {
+      width: 200px;
+      padding: 10px;
+      margin-bottom: 15px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+    }
+
+    input[type="submit"] {
+      background-color: #4CAF50;
+      color: white;
+      padding: 12px 20px;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      width: 100%;
+    }
+
+    #submitButton {
+      width: 150px;
+      height: 60px;
+      font-size: 16px;
+      background-color: #4CAF50; /* Ejemplo de color verde */
+      color: white;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+
+    <h1>Crear nueva tarea</h1>
+
+    <h2>Informacion general</h2>
+    <label for="productName">Nombre de la tarea:</label><br>
+    <input type="text" id="nombre" ><br><br>
+
+	<button id="submitButton" onclick="processForm()">Crear tarea</button><br><br><br>
+    <button id="submitButton" onclick="menuPrincipal()">Menu principal</button><br>
+
+
+  <script>
+      function processForm() {
+		  const nombre = document.getElementById('nombre').value;
+
+		  const url = `procesarCrearArchivo/${encodeURIComponent(nombre)}`;
+
+		  window.location.href = url;
+      }
+
+	  function menuPrincipal() {
+		  window.location.href = '/';
+	  }
+
+  </script>
+</body>
+</html>
