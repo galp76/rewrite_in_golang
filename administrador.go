@@ -579,7 +579,7 @@ func procesarNuevaOperacion(w http.ResponseWriter, r *http.Request) {
 				break;
 			}
 		}
-		if caracterNoPermitido {
+		if caracterNoPermitido || len(datosOperacion) > 2 {
 			http.Redirect(w, r, "/tareasCaracterNoPermitido", 303);
 		} else {
 			operacion = fmt.Sprintf("1 %s Pendiente", operacion);
@@ -595,17 +595,46 @@ func procesarNuevaOperacion(w http.ResponseWriter, r *http.Request) {
 				break;
 			}
 		}
-		if caracterNoPermitido {
+		if caracterNoPermitido || len(datosOperacion) > 2 {
 			http.Redirect(w, r, "/tareasCaracterNoPermitido", 303);
 		} else {
 			operacion = fmt.Sprintf("2 %s Pendiente", operacion);
 			archivoAgregar(archivoTareasGlobal, operacion);		
 			http.Redirect(w, r, "/crearOperaciones", 303);
 		}
-	default:
-		fmt.Println("qwerty");
+	case "Multiplicación":
+		operacion := datosOperacion[1];
+		var caracterNoPermitido bool;
+		for _, ch := range operacion {
+			if !strings.Contains("0123456789*", string(ch)) {
+				caracterNoPermitido = true;
+				break;
+			}
+		}
+		if caracterNoPermitido || len(datosOperacion) > 2 {
+			http.Redirect(w, r, "/tareasCaracterNoPermitido", 303);
+		} else {
+			operacion = fmt.Sprintf("3 %s Pendiente", operacion);
+			archivoAgregar(archivoTareasGlobal, operacion);		
+			http.Redirect(w, r, "/crearOperaciones", 303);
+		}
+	case "División":
+		operacion := fmt.Sprintf("%s/%s", datosOperacion[1], datosOperacion[2]);
+		var caracterNoPermitido bool;
+		for _, ch := range operacion {
+			if !strings.Contains("0123456789/", string(ch)) {
+				caracterNoPermitido = true;
+				break;
+			}
+		}
+		if caracterNoPermitido || len(datosOperacion) > 3 {
+			http.Redirect(w, r, "/tareasCaracterNoPermitido", 303);
+		} else {
+			operacion = fmt.Sprintf("4 %s Pendiente", operacion);
+			archivoAgregar(archivoTareasGlobal, operacion);		
+			http.Redirect(w, r, "/crearOperaciones", 303);
+		}
 	}
-
 }
 
 func tareasCaracterNoPermitido(w http.ResponseWriter, r *http.Request) {
