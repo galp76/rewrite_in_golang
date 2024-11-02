@@ -572,6 +572,7 @@ func procesarNuevaOperacion(w http.ResponseWriter, r *http.Request) {
 	switch datosOperacion[0] {
 	case "Suma":
 		operacion := strings.Replace(datosOperacion[1], "%2B", "+", -1);
+		// chequeamos si tiene caracteres distintos a los permitidos (numeros del 0 al 9 y el simbolo "+")
 		var caracterNoPermitido bool;
 		for _, ch := range operacion {
 			if !strings.Contains("0123456789+", string(ch)) {
@@ -579,7 +580,16 @@ func procesarNuevaOperacion(w http.ResponseWriter, r *http.Request) {
 				break;
 			}
 		}
-		if caracterNoPermitido || len(datosOperacion) > 2 {
+		// chequeamos que tenga al menos 2 operandos validos
+		operandos := strings.Split(operacion, "+");
+		var operandoVacio bool;
+		for _, item := range operandos {
+			if len(item) == 0 {
+				operandoVacio = true;
+			}
+		}
+		// si len(datosOperacion) > 2 el usuario escribio un "/" en la operacion
+		if caracterNoPermitido || len(datosOperacion) > 2 || len(operandos) < 2 || operandoVacio {
 			http.Redirect(w, r, "/tareasCaracterNoPermitido", 303);
 		} else {
 			operacion = fmt.Sprintf("1 %s Pendiente", operacion);
@@ -588,6 +598,7 @@ func procesarNuevaOperacion(w http.ResponseWriter, r *http.Request) {
 		}
 	case "Resta":
 		operacion := datosOperacion[1];
+		// buscamos caracteres distintos a numeros (0-9) y el simbolo "-"
 		var caracterNoPermitido bool;
 		for _, ch := range operacion {
 			if !strings.Contains("0123456789-", string(ch)) {
@@ -595,7 +606,16 @@ func procesarNuevaOperacion(w http.ResponseWriter, r *http.Request) {
 				break;
 			}
 		}
-		if caracterNoPermitido || len(datosOperacion) > 2 {
+		// chequeamos que tenga al menos 2 operandos validos
+		operandos := strings.Split(operacion, "-");
+		var operandoVacio bool;
+		for _, item := range operandos {
+			if len(item) == 0 {
+				operandoVacio = true;
+			}
+		}
+		// si len(datosOperacion) > 2 el usuario escribio un "/" en la operacion
+		if caracterNoPermitido || len(datosOperacion) > 2 || len(operandos) < 2 || operandoVacio {
 			http.Redirect(w, r, "/tareasCaracterNoPermitido", 303);
 		} else {
 			operacion = fmt.Sprintf("2 %s Pendiente", operacion);
@@ -604,6 +624,7 @@ func procesarNuevaOperacion(w http.ResponseWriter, r *http.Request) {
 		}
 	case "Multiplicación":
 		operacion := datosOperacion[1];
+		// buscamos caracteres distintos a numeros (0-9) y el simbolo "*"
 		var caracterNoPermitido bool;
 		for _, ch := range operacion {
 			if !strings.Contains("0123456789*", string(ch)) {
@@ -611,7 +632,16 @@ func procesarNuevaOperacion(w http.ResponseWriter, r *http.Request) {
 				break;
 			}
 		}
-		if caracterNoPermitido || len(datosOperacion) > 2 {
+		// chequeamos que la operacion tenga exactamente 2 operandos validos
+		operandos := strings.Split(operacion, "*");
+		var operandoVacio bool;
+		for _, item := range operandos {
+			if len(item) == 0 {
+				operandoVacio = true;
+			}
+		}
+		// si len(datosOperacion) > 2 el usuario escribio un "/" en la operacion
+		if caracterNoPermitido || len(datosOperacion) > 2 || len(operandos) != 2 || operandoVacio {
 			http.Redirect(w, r, "/tareasCaracterNoPermitido", 303);
 		} else {
 			operacion = fmt.Sprintf("3 %s Pendiente", operacion);
@@ -619,20 +649,33 @@ func procesarNuevaOperacion(w http.ResponseWriter, r *http.Request) {
 			http.Redirect(w, r, "/crearOperaciones", 303);
 		}
 	case "División":
-		operacion := fmt.Sprintf("%s/%s", datosOperacion[1], datosOperacion[2]);
-		var caracterNoPermitido bool;
-		for _, ch := range operacion {
-			if !strings.Contains("0123456789/", string(ch)) {
-				caracterNoPermitido = true;
-				break;
-			}
-		}
-		if caracterNoPermitido || len(datosOperacion) > 3 {
+		// este "if" evalua el caso de operaciones como 78956/
+		if len(datosOperacion) > 2 && len(datosOperacion[2]) == 0 {
 			http.Redirect(w, r, "/tareasCaracterNoPermitido", 303);
 		} else {
-			operacion = fmt.Sprintf("4 %s Pendiente", operacion);
-			archivoAgregar(archivoTareasGlobal, operacion);		
-			http.Redirect(w, r, "/crearOperaciones", 303);
+			var operacion string;
+			// construye operacion solo si se tiene el numero correcto de operandos
+			if len(datosOperacion) > 2 {
+				operacion = fmt.Sprintf("%s/%s", datosOperacion[1], datosOperacion[2]);
+			}
+			// buscamos caracteres distintos a numeros (0-9) y el simbolo "/"
+			var caracterNoPermitido bool;
+			for _, ch := range operacion {
+				if !strings.Contains("0123456789/", string(ch)) {
+					caracterNoPermitido = true;
+					break;
+				}
+			}
+			// si len(datosOperacion) > 3 el usuario escribio uno o mas "/" adicionales en la operacion
+			// si len(datosOperacion) < 3 el usuario escribio una operacion como /5896
+			// por lo tanto len(datosOperacion) debe ser exactamente 3
+			if caracterNoPermitido || len(datosOperacion) != 3 {
+				http.Redirect(w, r, "/tareasCaracterNoPermitido", 303);
+			} else {
+				operacion = fmt.Sprintf("4 %s Pendiente", operacion);
+				archivoAgregar(archivoTareasGlobal, operacion);		
+				http.Redirect(w, r, "/crearOperaciones", 303);
+			}
 		}
 	}
 }
