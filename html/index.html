@@ -60,7 +60,7 @@
 	<div><h3>Lista de tareas</h3></div>
     <div>
         <button onclick="crearTarea()">Crear</button>
-        <button onclick="vendors()">Borrar</button>
+        <button onclick="borrarTarea()">Borrar</button>
         <button onclick="vendors()">Editar</button>
         <button onclick="vendors()">Mostrar tareas</button>
         <button onclick="vendors()">Asignar a usuario</button>
@@ -102,6 +102,10 @@
 
 	function crearTarea() {
 		window.location.href = 'crearTarea';
+	}
+
+	function borrarTarea() {
+		window.location.href = 'borrarTarea';
 	}
 
     function logOut() {

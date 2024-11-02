@@ -694,6 +694,61 @@ func descartarTarea(w http.ResponseWriter, r *http.Request) {
 	http.Redirect(w, r, "/", 303);
 }
 
+
+// ************************* AQUI COMIENZAN LAS FUNCIONES DE BORRAR TAREA ****************************
+
+func borrarTarea(w http.ResponseWriter, r *http.Request) {
+	archivo, err := os.Create("html/tareas/borrarTarea/borrarTareaTemp.html");
+	if err != nil {
+		log.Fatal(err);
+	}
+	archivo.Close();
+	primeraParte, err2 := fileToSlice("html/tareas/borrarTarea/borrarTareaPrimeraMitad.html");
+	if err2 != nil {
+		log.Fatal(err);
+	}
+	for _, item := range primeraParte {
+		archivoAgregar("html/tareas/borrarTarea/borrarTareaTemp.html", item);
+	}
+	dir, err3 := os.Open("tareas");
+	if err3 != nil {
+		log.Fatal(err);
+	}
+	archivos, err5 := dir.Readdir(-1);
+	if err5 != nil {
+		log.Fatal(err5);
+	}
+	for _, archivo := range archivos {
+		archivoTemp := archivo.Name();
+		archivoTemp = archivoTemp[:len(archivoTemp) - 4];
+		item := fmt.Sprintf("<option value=\"%s\">%s</option>", archivoTemp, archivoTemp);
+		archivoAgregar("html/tareas/borrarTarea/borrarTareaTemp.html", item);
+	}
+	segundaParte, err4 := fileToSlice("html/tareas/borrarTarea/borrarTareaSegundaMitad.html");
+	if err4 != nil {
+		log.Fatal(err);
+	}
+	for _, item := range segundaParte {
+		archivoAgregar("html/tareas/borrarTarea/borrarTareaTemp.html", item);
+	}
+	os.Rename("html/tareas/borrarTarea/borrarTareaTemp.html", "html/tareas/borrarTarea/borrarTarea.html");
+	html, _ := cargarHtml("html/tareas/borrarTarea/borrarTarea.html");
+	fmt.Fprintf(w, string(html));
+}
+
+func procesarBorrarTarea(w http.ResponseWriter, r *http.Request) {
+	tarea := r.URL.Path[len("/procesarBorrarTarea/"):];
+
+	// procedemos a borrar el archivo 'tarea' del directorio tareas
+	os.Remove(fmt.Sprintf("tareas/%s.txt", tarea));
+	http.Redirect(w, r, "/tareaBorrada", 303);
+}
+
+func tareaBorrada(w http.ResponseWriter, r *http.Request) {
+	html, _ := cargarHtml("html/tareas/borrarTarea/tareaBorrada.html");
+	fmt.Fprintf(w, string(html));
+}
+
 func mainAdministrador() {
 //	http.HandleFunc("/view/", viewHandler);
 	http.HandleFunc("/", index);		
@@ -738,6 +793,10 @@ func mainAdministrador() {
 	http.HandleFunc("/procesarNuevaOperacion/", procesarNuevaOperacion);
 	http.HandleFunc("/tareasCaracterNoPermitido", tareasCaracterNoPermitido);
 	http.HandleFunc("/descartarTarea", descartarTarea);
+
+	http.HandleFunc("/borrarTarea", borrarTarea);
+	http.HandleFunc("/procesarBorrarTarea/", procesarBorrarTarea);
+	http.HandleFunc("/tareaBorrada", tareaBorrada);
 
 	fmt.Println("Iniciando servidor...");
 	log.Fatal(http.ListenAndServe(":8080", nil));

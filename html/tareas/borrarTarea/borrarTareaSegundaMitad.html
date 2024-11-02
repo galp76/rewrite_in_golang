@@ -1,0 +1,22 @@
+    </select><br><br>
+
+	<button id="submitButton" onclick="processForm()">Borrar</button><br><br><br>
+    <button id="submitButton" onclick="menuPrincipal()">Menu principal</button><br>
+
+
+  <script>
+      function processForm() {
+		  const tarea = document.getElementById('tarea').value;
+
+		  const url = `procesarBorrarTarea/${encodeURIComponent(tarea)}`;
+
+		  window.location.href = url;
+      }
+
+	  function menuPrincipal() {
+		  window.location.href = 'menuPrincipal';
+	  }
+
+  </script>
+</body>
+</html>

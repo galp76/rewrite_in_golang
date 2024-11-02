@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Borrar grupo</title>
+  <title>Borrar tarea</title>
   <style>
     body {
       font-family: Arial, sans-serif;
@@ -72,20 +72,11 @@
 </head>
 <body>
 
-  <h1>Borrar grupo</h1>
+  <h1>Borrar tarea</h1>
 
-    <h2>Selecciona el grupo de la lista:</h2>
+    <h2>Selecciona la tarea de la lista:</h2>
 
-    <label for="unitOfMeasure">También se eliminarán todos los usuarios del grupo seleccionado</label><br>
-    <select id="grupo" >
-<option value="Caracas">Caracas</option>
-<option value="Barquisimeto">Barquisimeto</option>
-<option value="Barcelona">Barcelona</option>
-<option value="Barinas">Barinas</option>
-<option value="Zaragoza">Zaragoza</option>
-<option value="Madrid">Madrid</option>
-<option value="Maturin">Maturin</option>
-<option value="Achaguas">Achaguas</option>
+    <select id="tarea" >
     </select><br><br>
 
 	<button id="submitButton" onclick="processForm()">Borrar</button><br><br><br>
@@ -94,9 +85,9 @@
 
   <script>
       function processForm() {
-		  const grupo = document.getElementById('grupo').value;
+		  const tarea = document.getElementById('tarea').value;
 
-		  const url = `procesarBorrarGrupo/${encodeURIComponent(grupo)}`;
+		  const url = `procesarBorrarTarea/${encodeURIComponent(tarea)}`;
 
 		  window.location.href = url;
       }
