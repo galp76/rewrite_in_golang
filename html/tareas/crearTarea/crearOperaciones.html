@@ -87,7 +87,8 @@
     <input type="text" id="operacion" ><br><br>
 
 	<button id="submitButton" onclick="processForm()">Incluir operación</button><br><br><br>
-    <button id="submitButton" onclick="terminarTarea()">Terminar tarea</button><br>
+	<button id="submitButton" onclick="terminarTarea()">Guardar tarea</button><br><br><br>
+    <button id="submitButton" onclick="descartarTarea()">Descartar tarea</button><br>
 
 
   <script>
@@ -101,9 +102,11 @@
       }
 
 	  function terminarTarea() {
-		  const url = '/';
+		  window.location.href = '/';
+	  }
 
-		  window.location.href = url;
+	  function descartarTarea() {
+		  window.location.href = 'descartarTarea';
 	  }
 
   </script>

@@ -685,6 +685,15 @@ func tareasCaracterNoPermitido(w http.ResponseWriter, r *http.Request) {
 	fmt.Fprintf(w, string(html));
 }
 
+func descartarTarea(w http.ResponseWriter, r *http.Request) {
+	err := os.Remove(archivoTareasGlobal);
+	if err != nil {
+		log.Fatal(err);
+	}
+
+	http.Redirect(w, r, "/", 303);
+}
+
 func mainAdministrador() {
 //	http.HandleFunc("/view/", viewHandler);
 	http.HandleFunc("/", index);		
@@ -728,6 +737,7 @@ func mainAdministrador() {
 	http.HandleFunc("/crearOperaciones", crearOperaciones);
 	http.HandleFunc("/procesarNuevaOperacion/", procesarNuevaOperacion);
 	http.HandleFunc("/tareasCaracterNoPermitido", tareasCaracterNoPermitido);
+	http.HandleFunc("/descartarTarea", descartarTarea);
 
 	fmt.Println("Iniciando servidor...");
 	log.Fatal(http.ListenAndServe(":8080", nil));
