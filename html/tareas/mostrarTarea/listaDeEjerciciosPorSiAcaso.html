@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Lista de  usuarios</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 20px;
+      background-color: #f4f4f4; /* Light background */
+    }
+
+    h1 {
+      color: #333;
+      text-align: center;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 5px;
+      font-weight: bold;
+    }
+
+    input[type="text"],
+    input[type="number"],
+    textarea {
+      width: 200px;
+      padding: 10px;
+      margin-bottom: 15px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+    }
+
+    input[type="file"] {
+      margin-bottom: 15px;
+    }
+
+    textarea {
+      resize: vertical; /* Allow resizing only vertically */
+      height: 100px;
+    }
+
+    select {
+      width: 200px;
+      padding: 10px;
+      margin-bottom: 15px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+    }
+
+    input[type="submit"] {
+      background-color: #4CAF50;
+      color: white;
+      padding: 12px 20px;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      width: 100%;
+    }
+
+	table, th, td {
+		border: 1px solid black;
+		border-collapse: collapse;
+	}
+
+	th {
+		background-color: #4CAF50;
+	}
+
+    #submitButton {
+      width: 150px;
+      height: 60px;
+      font-size: 16px;
+      background-color: #4CAF50; /* Ejemplo de color verde */
+      color: white;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>Lista de usuarios</h1>
+<h2>Grupo: Caracas</h2>
+<table style="width:300px">
+<tr>
+<th>Usuario</th>
+<th>Clave</th>
+</tr>
+<tr>
+<td>galp</td>
+<td>1976</td>
+</tr>
+
+    </table><br><br>
+
+	<button id="submitButton" onclick="processForm()">Regresar</button><br><br><br>
+    <button id="submitButton" onclick="menuPrincipal()">Menu principal</button><br>
+
+
+  <script>
+      function processForm() {
+		  window.location.href = 'mostrarUsuario';
+      }
+
+	  function menuPrincipal() {
+		  window.location.href = 'menuPrincipal';
+	  }
+
+  </script>
+</body>
+</html>

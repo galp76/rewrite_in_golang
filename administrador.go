@@ -793,6 +793,69 @@ func mostrarTarea(w http.ResponseWriter, r *http.Request) {
 	fmt.Fprintf(w, string(html));
 }
 
+func procesarMostrarTarea(w http.ResponseWriter, r *http.Request) {
+	linea := r.URL.Path[len("/procesarMostrarTarea/"):];
+	dir, err := os.Open("tareas");
+	if err != nil {
+		log.Fatal(err);
+	}
+	archivos, err5 := dir.Readdir(-1);
+	if err5 != nil {
+		log.Fatal(err5);
+	}
+	var ejercicios []string;
+	for _, archivo := range archivos {
+		archivoTemp := archivo.Name();
+		if archivoTemp == fmt.Sprintf("%s.txt", linea) {
+			ejercicios, err = fileToSlice(fmt.Sprintf("tareas/%s", archivoTemp));
+			if err != nil {
+				log.Fatal(err);
+			}
+			break;
+		}
+	}
+	
+	archivo, err := os.Create("html/tareas/mostrarTarea/listaDeEjerciciosTemp.html");
+	if err != nil {
+		log.Fatal(err);
+	}
+	archivo.Close();
+	primeraParte, err2 := fileToSlice("html/tareas/mostrarTarea/listaDeEjerciciosPrimeraMitad.html");
+	if err2 != nil {
+		log.Fatal(err);
+	}
+	for _, item := range primeraParte {
+		archivoAgregar("html/tareas/mostrarTarea/listaDeEjerciciosTemp.html", item);
+	}
+	item := fmt.Sprintf("<h2>Tarea: %s</h2>\n<table style=\"width:300px\">\n<tr>\n<th>Tipo</th>\n<th>Operacion</th>\n</tr>", linea);
+	archivoAgregar("html/tareas/mostrarTarea/listaDeEjerciciosTemp.html", item);
+	operaciones := map[string]string{
+		"1": "Suma",
+		"2": "Resta",
+		"3": "Multiplicación",
+		"4": "División",
+	};
+	for _, ejercicio := range ejercicios {
+		partes := strings.Split(ejercicio, " ");
+		item := fmt.Sprintf("<tr>\n<td>%s</td>\n<td>%s</td>\n</tr>\n", operaciones[partes[0]], partes[1]);
+		archivoAgregar("html/tareas/mostrarTarea/listaDeEjerciciosTemp.html", item);
+	}
+	segundaParte, err4 := fileToSlice("html/tareas/mostrarTarea/listaDeEjerciciosSegundaMitad.html");
+	if err4 != nil {
+		log.Fatal(err);
+	}
+	for _, item := range segundaParte {
+		archivoAgregar("html/tareas/mostrarTarea/listaDeEjerciciosTemp.html", item);
+	}
+	os.Rename("html/tareas/mostrarTarea/listaDeEjerciciosTemp.html", "html/tareas/mostrarTarea/listaDeEjercicios.html");
+	http.Redirect(w, r, "/listaDeEjercicios", 303);
+}
+
+func listaDeEjercicios(w http.ResponseWriter, r *http.Request) {
+	html, _ := cargarHtml("html/tareas/mostrarTarea/listaDeEjercicios.html");
+	fmt.Fprintf(w, string(html));
+}
+
 func mainAdministrador() {
 //	http.HandleFunc("/view/", viewHandler);
 	http.HandleFunc("/", index);		
@@ -843,6 +906,8 @@ func mainAdministrador() {
 	http.HandleFunc("/tareaBorrada", tareaBorrada);
 
 	http.HandleFunc("/mostrarTarea", mostrarTarea);
+	http.HandleFunc("/procesarMostrarTarea/", procesarMostrarTarea);
+	http.HandleFunc("/listaDeEjercicios", listaDeEjercicios);
 
 	fmt.Println("Iniciando servidor...");
 	log.Fatal(http.ListenAndServe(":8080", nil));
