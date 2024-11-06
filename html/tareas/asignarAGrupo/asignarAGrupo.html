@@ -98,11 +98,10 @@
 
   <script>
       function processForm() {
-		  const usuario = document.getElementById('usuario').value;
-		  const grupoActual = document.getElementById('grupoActual').value;
-		  const nuevoGrupo = document.getElementById('nuevoGrupo').value;
+		  const grupo = document.getElementById('grupo').value;
+		  const tarea = document.getElementById('tarea').value;
 
-		  const url = `procesarCambiarGrupo/${encodeURIComponent(usuario)}/${encodeURIComponent(grupoActual)}/${encodeURIComponent(nuevoGrupo)}`;
+		  const url = `procesarAsignarAGrupo/${encodeURIComponent(grupo)}/${encodeURIComponent(tarea)}/`;
 
 		  window.location.href = url;
       }

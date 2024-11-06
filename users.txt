@@ -1,3 +1,4 @@
 admin;1234;admin
 gllr;2011;Madrid
 galp;1976;Caracas
+trump;2024;Caracas
