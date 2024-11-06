@@ -856,6 +856,58 @@ func listaDeEjercicios(w http.ResponseWriter, r *http.Request) {
 	fmt.Fprintf(w, string(html));
 }
 
+
+// ************************* AQUI COMIENZAN LAS FUNCIONES DE ASIGNAR TAREA A GRUPO **************************
+
+func asignarAGrupo(w http.ResponseWriter, r *http.Request) {
+	archivo, err := os.Create("html/tareas/asignarAGrupo/asignarAGrupoTemp.html");
+	if err != nil {
+		log.Fatal(err);
+	}
+	archivo.Close();
+	primeraParte, err2 := fileToSlice("html/tareas/asignarAGrupo/asignarAGrupoPrimeraMitad.html");
+	if err2 != nil {
+		log.Fatal(err);
+	}
+	for _, item := range primeraParte {
+		archivoAgregar("html/tareas/asignarAGrupo/asignarAGrupoTemp.html", item);
+	}
+	grupos, err3 := fileToSlice("grupos.txt");
+	if err3 != nil {
+		log.Fatal(err);
+	}
+	for _, grupo := range grupos {
+		item := fmt.Sprintf("<option value=\"%s\">%s</option>", grupo, grupo);
+		archivoAgregar("html/tareas/asignarAGrupo/asignarAGrupoTemp.html", item);
+	}
+	item := "</select><br><br>\n<label for=\"unitOfMeasure\">Selecciona una tarea:</label><br>\n<select id=\"tarea\">\n";
+	archivoAgregar("html/tareas/asignarAGrupo/asignarAGrupoTemp.html", item);
+	dir, err3 := os.Open("tareas");
+	if err3 != nil {
+		log.Fatal(err);
+	}
+	archivos, err5 := dir.Readdir(-1);
+	if err5 != nil {
+		log.Fatal(err5);
+	}
+	for _, archivo := range archivos {
+		archivoTemp := archivo.Name();
+		archivoTemp = archivoTemp[:len(archivoTemp) - 4];
+		item := fmt.Sprintf("<option value=\"%s\">%s</option>", archivoTemp, archivoTemp);
+		archivoAgregar("html/tareas/asignarAGrupo/asignarAGrupoTemp.html", item);
+	}
+	segundaParte, err4 := fileToSlice("html/tareas/asignarAGrupo/asignarAGrupoSegundaMitad.html");
+	if err4 != nil {
+		log.Fatal(err);
+	}
+	for _, item := range segundaParte {
+		archivoAgregar("html/tareas/asignarAGrupo/asignarAGrupoTemp.html", item);
+	}
+	os.Rename("html/tareas/asignarAGrupo/asignarAGrupoTemp.html", "html/tareas/asignarAGrupo/asignarAGrupo.html");
+	html, _ := cargarHtml("html/tareas/asignarAGrupo/asignarAGrupo.html");
+	fmt.Fprintf(w, string(html));
+}
+
 func mainAdministrador() {
 //	http.HandleFunc("/view/", viewHandler);
 	http.HandleFunc("/", index);		
@@ -908,6 +960,8 @@ func mainAdministrador() {
 	http.HandleFunc("/mostrarTarea", mostrarTarea);
 	http.HandleFunc("/procesarMostrarTarea/", procesarMostrarTarea);
 	http.HandleFunc("/listaDeEjercicios", listaDeEjercicios);
+
+	http.HandleFunc("/asignarAGrupo", asignarAGrupo);
 
 	fmt.Println("Iniciando servidor...");
 	log.Fatal(http.ListenAndServe(":8080", nil));
