@@ -88,6 +88,7 @@
 <label for="unitOfMeasure">Selecciona una tarea:</label><br>
 <select id="tarea">
 
+<option value="2-sumas">2-sumas</option>
 <option value="qwerty">qwerty</option>
 <option value="german">german</option>
     </select><br><br>
@@ -101,7 +102,7 @@
 		  const grupo = document.getElementById('grupo').value;
 		  const tarea = document.getElementById('tarea').value;
 
-		  const url = `procesarAsignarAGrupo/${encodeURIComponent(grupo)}/${encodeURIComponent(tarea)}/`;
+		  const url = `procesarAsignarAGrupo/${encodeURIComponent(grupo)}/${encodeURIComponent(tarea)}`;
 
 		  window.location.href = url;
       }

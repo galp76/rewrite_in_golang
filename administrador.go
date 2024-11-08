@@ -910,19 +910,31 @@ func asignarAGrupo(w http.ResponseWriter, r *http.Request) {
 }
 
 func procesarAsignarAGrupo(w http.ResponseWriter, r *http.Request) {
-	linea := r.URL.Path[len("procesarAsignarAGrupo/"):];
+	linea := r.URL.Path[len("/procesarAsignarAGrupo/"):];
+	// argumentos[0] => grupo **** argumentos[1] => tarea
 	argumentos := strings.Split(linea, "/");
 	usuarios, err := fileToSlice("users.txt");
 	if err != nil {
 		log.Fatal(err);
 	}
 	for _, usuario := range usuarios {
+		// partes[0] => usuario **** partes[1] => clave ***** partes[2] => grupo
 		partes := strings.Split(usuario, ";");
 		// comparando grupos en cada usuario para asignar la tarea
 		if partes[2] == argumentos[0] {
-			_, err2 := io.Copy(fmt.Sprintf("usuarios/%s", partes[0]), fmt.Sprintf("tareas/%s.txt", argumentos[1]));
+			archivoDestino, err2 := os.Create(fmt.Sprintf("usuarios/%s/tareas/%s.txt", partes[0], argumentos[1]));
 			if err2 != nil {
 				log.Fatal(err2);
+			}
+			defer archivoDestino.Close();
+			archivoOrigen, err3 := os.Create(fmt.Sprintf("tareas/%s.txt", argumentos[1]));
+			if err3 != nil {
+				log.Fatal(err3);
+			}
+			defer archivoOrigen.Close();
+			_, err4 := io.Copy(archivoDestino, archivoOrigen);
+			if err4 != nil {
+				log.Fatal(err4);
 			}
 		}
 	}
