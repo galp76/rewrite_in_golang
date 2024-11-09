@@ -942,6 +942,39 @@ func procesarAsignarAGrupo(w http.ResponseWriter, r *http.Request) {
 	fmt.Fprintf(w, string(html));
 }
 
+func asignarAUsuario1(w http.ResponseWriter, r *http.Request) {
+	archivo, err := os.Create("html/tareas/asignarAUsuario/solicitarGrupoTemp.html");
+	if err != nil {
+		log.Fatal(err);
+	}
+	archivo.Close();
+	primeraParte, err2 := fileToSlice("html/tareas/asignarAUsuario/solicitarGrupoPrimeraMitad.html");
+	if err2 != nil {
+		log.Fatal(err);
+	}
+	for _, item := range primeraParte {
+		archivoAgregar("html/tareas/asignarAUsuario/solicitarGrupoTemp.html", item);
+	}
+	grupos, err3 := fileToSlice("grupos.txt");
+	if err3 != nil {
+		log.Fatal(err);
+	}
+	for _, grupo := range grupos {
+		item := fmt.Sprintf("<option value=\"%s\">%s</option>", grupo, grupo);
+		archivoAgregar("html/tareas/asignarAUsuario/solicitarGrupoTemp.html", item);
+	}
+	segundaParte, err4 := fileToSlice("html/tareas/asignarAUsuario/solicitarGrupoSegundaMitad.html");
+	if err4 != nil {
+		log.Fatal(err);
+	}
+	for _, item := range segundaParte {
+		archivoAgregar("html/tareas/asignarAUsuario/solicitarGrupoTemp.html", item);
+	}
+	os.Rename("html/tareas/asignarAUsuario/solicitarGrupoTemp.html", "html/tareas/asignarAUsuario/solicitarGrupo.html");
+	html, _ := cargarHtml("html/tareas/asignarAUsuario/solicitarGrupo.html");
+	fmt.Fprintf(w, string(html));
+}
+
 func mainAdministrador() {
 //	http.HandleFunc("/view/", viewHandler);
 	http.HandleFunc("/", index);		
@@ -997,6 +1030,8 @@ func mainAdministrador() {
 
 	http.HandleFunc("/asignarAGrupo", asignarAGrupo);
 	http.HandleFunc("/procesarAsignarAGrupo/", procesarAsignarAGrupo);
+
+	http.HandleFunc("/asignarAUsuario1", asignarAUsuario1);
 
 	fmt.Println("Iniciando servidor...");
 	log.Fatal(http.ListenAndServe(":8080", nil));
