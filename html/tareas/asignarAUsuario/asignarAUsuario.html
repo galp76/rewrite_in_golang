@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Borrar usuario</title>
+  <title>Asignar tarea a usuario</title>
   <style>
     body {
       font-family: Arial, sans-serif;
@@ -72,14 +72,10 @@
 </head>
 <body>
 
-  <h1>Borrar usuario</h1>
+  <h1>Asignar tarea a usuario</h1>
 
-    <h2>Informacion del usuario</h2>
-    <label for="productName">Nombre:</label><br>
-    <input type="text" id="usuario" ><br><br>
-
-    <label for="unitOfMeasure">Grupo:</label><br>
-    <select id="grupo" >
+    <label for="unitOfMeasure">Selecciona un usuario:</label><br>
+    <select id="usuario" >
 <option value="Caracas">Caracas</option>
 <option value="Barquisimeto">Barquisimeto</option>
 <option value="Barcelona">Barcelona</option>
@@ -88,24 +84,31 @@
 <option value="Madrid">Madrid</option>
 <option value="Maturin">Maturin</option>
 <option value="Achaguas">Achaguas</option>
+</select><br><br>
+<label for="unitOfMeasure">Selecciona una tarea:</label><br>
+<select id="tarea">
+
+<option value="2-sumas">2-sumas</option>
+<option value="qwerty">qwerty</option>
+<option value="german">german</option>
     </select><br><br>
 
-	<button id="submitButton" onclick="processForm()">Borrar</button><br><br><br>
+	<button id="submitButton" onclick="processForm()">Asignar tarea</button><br><br><br>
     <button id="submitButton" onclick="menuPrincipal()">Menu principal</button><br>
 
 
   <script>
       function processForm() {
 		  const usuario = document.getElementById('usuario').value;
-		  const grupo = document.getElementById('grupo').value;
+		  const tarea = document.getElementById('tarea').value;
 
-		  const url = `procesarBorrarUsuario/${encodeURIComponent(usuario)}/${encodeURIComponent(grupo)}`;
+		  const url = `procesarAsignarAGrupo/${encodeURIComponent(usuario)}/${encodeURIComponent(tarea)}`;
 
 		  window.location.href = url;
       }
 
 	  function menuPrincipal() {
-		  window.location.href = 'menuPrincipal';
+		  window.location.href = '/';
 	  }
 
   </script>
