@@ -942,6 +942,10 @@ func procesarAsignarAGrupo(w http.ResponseWriter, r *http.Request) {
 	fmt.Fprintf(w, string(html));
 }
 
+
+// ********************** AQUI COMIENZAN LAS FUNCIONES DE ASIGNAR A USUARIO ****************************
+
+
 func asignarAUsuario1(w http.ResponseWriter, r *http.Request) {
 	archivo, err := os.Create("html/tareas/asignarAUsuario/solicitarGrupoTemp.html");
 	if err != nil {
@@ -972,6 +976,59 @@ func asignarAUsuario1(w http.ResponseWriter, r *http.Request) {
 	}
 	os.Rename("html/tareas/asignarAUsuario/solicitarGrupoTemp.html", "html/tareas/asignarAUsuario/solicitarGrupo.html");
 	html, _ := cargarHtml("html/tareas/asignarAUsuario/solicitarGrupo.html");
+	fmt.Fprintf(w, string(html));
+}
+
+func asignarAUsuario2(w http.ResponseWriter, r *http.Request) {
+	linea := r.URL.Path[len("/asignarAUsuario2/"):];
+	archivo, err := os.Create("html/tareas/asignarAUsuario/asignarAUsuarioTemp.html");
+	if err != nil {
+		log.Fatal(err);
+	}
+	archivo.Close();
+	primeraParte, err2 := fileToSlice("html/tareas/asignarAUsuario/asignarAUsuarioPrimeraMitad.html");
+	if err2 != nil {
+		log.Fatal(err);
+	}
+	for _, item := range primeraParte {
+		archivoAgregar("html/tareas/asignarAUsuario/asignarAUsuarioTemp.html", item);
+	}
+	usuarios, err3 := fileToSlice("users.txt");
+	if err3 != nil {
+		log.Fatal(err);
+	}
+	for _, usuario := range usuarios {
+		partes := strings.Split(usuario, ";");
+		if partes[2] == linea {
+			item := fmt.Sprintf("<option value=\"%s\">%s</option>", partes[0], partes[0]);
+			archivoAgregar("html/tareas/asignarAUsuario/asignarAUsuarioTemp.html", item);
+		}
+	}
+	item := "</select><br><br>\n<label for=\"unitOfMeasure\">Selecciona una tarea:</label><br>\n<select id=\"tarea\">\n";
+	archivoAgregar("html/tareas/asignarAUsuario/asignarAUsuarioTemp.html", item);
+	dir, err3 := os.Open("tareas");
+	if err3 != nil {
+		log.Fatal(err);
+	}
+	archivos, err5 := dir.Readdir(-1);
+	if err5 != nil {
+		log.Fatal(err5);
+	}
+	for _, archivo := range archivos {
+		archivoTemp := archivo.Name();
+		archivoTemp = archivoTemp[:len(archivoTemp) - 4];
+		item := fmt.Sprintf("<option value=\"%s\">%s</option>", archivoTemp, archivoTemp);
+		archivoAgregar("html/tareas/asignarAUsuario/asignarAUsuarioTemp.html", item);
+	}
+	segundaParte, err4 := fileToSlice("html/tareas/asignarAUsuario/asignarAUsuarioSegundaMitad.html");
+	if err4 != nil {
+		log.Fatal(err);
+	}
+	for _, item := range segundaParte {
+		archivoAgregar("html/tareas/asignarAUsuario/asignarAUsuarioTemp.html", item);
+	}
+	os.Rename("html/tareas/asignarAUsuario/asignarAUsuarioTemp.html", "html/tareas/asignarAUsuario/asignarAUsuario.html");
+	html, _ := cargarHtml("html/tareas/asignarAUsuario/asignarAUsuario.html");
 	fmt.Fprintf(w, string(html));
 }
 
@@ -1032,6 +1089,7 @@ func mainAdministrador() {
 	http.HandleFunc("/procesarAsignarAGrupo/", procesarAsignarAGrupo);
 
 	http.HandleFunc("/asignarAUsuario1", asignarAUsuario1);
+	http.HandleFunc("/asignarAUsuario2/", asignarAUsuario2);
 
 	fmt.Println("Iniciando servidor...");
 	log.Fatal(http.ListenAndServe(":8080", nil));

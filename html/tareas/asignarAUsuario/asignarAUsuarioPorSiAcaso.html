@@ -76,6 +76,14 @@
 
     <label for="unitOfMeasure">Selecciona un usuario:</label><br>
     <select id="usuario" >
+<option value="Caracas">Caracas</option>
+<option value="Barquisimeto">Barquisimeto</option>
+<option value="Barcelona">Barcelona</option>
+<option value="Barinas">Barinas</option>
+<option value="Zaragoza">Zaragoza</option>
+<option value="Madrid">Madrid</option>
+<option value="Maturin">Maturin</option>
+<option value="Achaguas">Achaguas</option>
 </select><br><br>
 <label for="unitOfMeasure">Selecciona una tarea:</label><br>
 <select id="tarea">
@@ -94,7 +102,7 @@
 		  const usuario = document.getElementById('usuario').value;
 		  const tarea = document.getElementById('tarea').value;
 
-		  const url = `procesarAsignarAUsuario/${encodeURIComponent(usuario)}/${encodeURIComponent(tarea)}`;
+		  const url = `procesarAsignarAGrupo/${encodeURIComponent(usuario)}/${encodeURIComponent(tarea)}`;
 
 		  window.location.href = url;
       }

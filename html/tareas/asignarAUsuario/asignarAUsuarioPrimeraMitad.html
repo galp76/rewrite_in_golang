@@ -76,33 +76,3 @@
 
     <label for="unitOfMeasure">Selecciona un usuario:</label><br>
     <select id="usuario" >
-</select><br><br>
-<label for="unitOfMeasure">Selecciona una tarea:</label><br>
-<select id="tarea">
-
-<option value="2-sumas">2-sumas</option>
-<option value="qwerty">qwerty</option>
-<option value="german">german</option>
-    </select><br><br>
-
-	<button id="submitButton" onclick="processForm()">Asignar tarea</button><br><br><br>
-    <button id="submitButton" onclick="menuPrincipal()">Menu principal</button><br>
-
-
-  <script>
-      function processForm() {
-		  const usuario = document.getElementById('usuario').value;
-		  const tarea = document.getElementById('tarea').value;
-
-		  const url = `procesarAsignarAUsuario/${encodeURIComponent(usuario)}/${encodeURIComponent(tarea)}`;
-
-		  window.location.href = url;
-      }
-
-	  function menuPrincipal() {
-		  window.location.href = '/';
-	  }
-
-  </script>
-</body>
-</html>
