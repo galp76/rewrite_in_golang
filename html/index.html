@@ -1,55 +1,66 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Menu Administrador</title>
-  <style>
-    body {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      height: 100vh;
-      margin: 0;
-      background-color: #f0f8ff;
-    }
+	<meta charset="utf-8">
+	<title>Menu Administrador</title>
+	<style>
+		body {
+			font-family: Verdana, Geneva, Arial, sans-serif;
+			font-size: small;
+			display: flex;
+			justify-content: center;
+			align-items: center;
+			height: 100vh;
+			margin: 0;
+			background-color: #f0f8ff;
+		}
 
-    .container {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-    }
+		h1 {
+			font-size: 150%;
+		}
 
-    .separator {
-      height: 50px;
-    }
+		h2 {
+			font-size: 130%;
+		}
 
-    button {
-      width: 160px;
-      height: 50px;
-      font-size: 15px;
-      padding: 10px 20px;
-      margin: 10px;
-      border: none;
-      border-radius: 5px;
-      cursor: pointer;
-      background-color: #4CAF50;
-      color: white;
-    }
+		.container {
+			display: flex;
+			flex-direction: column;
+			align-items: center;
+		}
 
-    #logout {
-      background-color: red;
-    }
-  </style>
+		.separator {
+			height: 50px;
+		}
+
+		button {
+			width: 160px;
+			height: 50px;
+			font-size: 15px;
+			padding: 10px 20px;
+			margin: 10px;
+			border: none;
+			border-radius: 5px;
+			cursor: pointer;
+			background-color: #4CAF50;
+			color: white;
+		}
+
+		#logout {
+			background-color: red;
+		}
+	</style>
 </head>
 <body>
   <div class="container">
-	<div><h3>Usuarios</h3></div>
+	<div><h1>Usuarios</h1></div>
     <div>
         <button onclick="crearUsuario()">Crear</button>
         <button onclick="borrarUsuario()">Borrar</button>
         <button onclick="cambiarGrupo()">Cambiar grupo</button>
     </div>
     <div class="separator"></div>
-	<div><h3>Grupos de usuarios</h3></div>
+	<div><h1>Grupos de usuarios</h1></div>
     <div>
         <button onclick="crearGrupo()">Crear</button>
         <button onclick="borrarGrupo()">Borrar</button>
@@ -57,7 +68,7 @@
         <button onclick="mostrarUsuario()">Listar usuarios</button>
     </div>
     <div class="separator"></div>
-	<div><h3>Lista de tareas</h3></div>
+	<div><h1>Lista de tareas</h1></div>
     <div>
         <button onclick="crearTarea()">Crear</button>
         <button onclick="borrarTarea()">Borrar</button>
